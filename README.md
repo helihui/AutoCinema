@@ -441,6 +441,10 @@ A: 系统会自动降级到占位图模式,检查:
 - 提交 [Issue](https://github.com/helihui/AutoCinema/issues)
 - 发起 [Discussion](https://github.com/helihui/AutoCinema/discussions)
 
+## 📚 加群学习
+
+![alt text](image.png)
+
 ---
 
 ⭐ 如果这个项目对你有帮助,请给它一个星标!
