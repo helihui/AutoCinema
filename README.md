@@ -80,15 +80,18 @@ graph TB
 ### 架构说明
 
 #### 1. 导演层 (Director Layer)
+
 - **StoryboardService**: 将用户的原始故事文本转换为结构化的分镜脚本
 - **VolcengineLlmService**: 调用火山引擎的大语言模型 (Doubao),进行文本理解和分镜拆解
 
 #### 2. 演员层 (Actor Layer)
+
 - **VolcengineImageService**: 调用火山引擎 (Seedream) 生成高质量的场景图片
 - **MiniMaxSpeechService**: 调用 MiniMax TTS 生成逼真的语音旁白
 - 支持并发控制和降级策略
 
 #### 3. 剪辑层 (Editor Layer)
+
 - **SrtSubtitleService**: 生成 SRT 字幕文件,确保字幕与语音时间轴对齐
 - **FFMpegVideoService**: 使用 FFmpeg 将图片、语音和字幕合成最终的视频文件
 - **NAudioAnalysisService**: 分析音频文件的时长,用于精确的时间轴控制
@@ -152,7 +155,9 @@ AutoCinema/
 - [FFmpeg](https://ffmpeg.org/download.html) (已包含在 `src/ffmpeg` 目录中)
 - 以下 API 密钥:
   - 火山引擎 Ark API 密钥 (用于 LLM 和图片生成)
+  网址：<https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey>
   - MiniMax API 密钥 (用于语音合成)
+  网址：<https://www.minimaxi.com/audio>
 
 ### 安装步骤
 
@@ -163,7 +168,7 @@ git clone https://github.com/helihui/AutoCinema.git
 cd AutoCinema
 ```
 
-2. **配置 API 密钥**
+1. **配置 API 密钥**
 
 编辑 `src/AutoCinema.Pro/appsettings.json`,填入你的 API 密钥:
 
@@ -188,13 +193,13 @@ cd AutoCinema
 }
 ```
 
-3. **构建项目**
+1. **构建项目**
 
 ```bash
 dotnet build
 ```
 
-4. **运行程序**
+1. **运行程序**
 
 ```bash
 cd src/AutoCinema.Pro
@@ -348,7 +353,7 @@ Console.WriteLine($"视频已生成: {outputPath}");
 
 ## 📊 工作流程
 
-1. **导演阶段**: 
+1. **导演阶段**:
    - 接收用户输入的故事文本
    - 调用 LLM 分析并拆解为多个场景
    - 为每个场景生成视觉描述和语音文本
@@ -375,6 +380,7 @@ A: 确保 `src/ffmpeg` 目录中包含 `ffmpeg.exe` 和 `ffprobe.exe`,或者在�
 **Q: API 调用失败**
 
 A: 检查以下内容:
+
 - API 密钥是否正确
 - 网络连接是否正常
 - API 配额是否充足
@@ -383,6 +389,7 @@ A: 检查以下内容:
 **Q: 生成的视频没有字幕**
 
 A: 确保:
+
 - 语音文件生成成功
 - 字幕服务正常工作
 - FFmpeg 支持字幕烧录 (需要 libass)
@@ -390,6 +397,7 @@ A: 确保:
 **Q: 图片生成失败**
 
 A: 系统会自动降级到占位图模式,检查:
+
 - 火山引擎 API 配额
 - 提示词是否符合内容安全规范
 - 网络连接稳定性
