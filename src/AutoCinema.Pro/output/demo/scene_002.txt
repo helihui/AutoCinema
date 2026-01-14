@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A flat 2D animation still of cute anthropomorphic kitten Pipi. Cartoon style, clean bold outlines, solid cel-shaded colors, vector art aesthetic. Pipi has cream and orange fur patches simplified into color blocks, huge expressive green cartoon eyes, big ears, wearing a simple red scarf with stylized yellow star shapes, and a large fluffy striped tail. Standing pose. The background is a simplified graphic galaxy with flat planetary shapes and stars. No photorealism, no 3D textures, no gradients., 2D动画风格，灰色的月球表面，小猫皮皮推开机舱门跳下来，方形机器人坐在折叠椅上，金属手臂举着长钓竿，钓线末端挂着闪烁的星光粒子，背景是黑色的太空和简化的行星图形。
+
+[Speech Text]
+飞船降落在灰色的月球背面，皮皮推开机舱门跳下来，看到一个方形机器人坐在折叠椅上，金属手臂举着长钓竿，钓线末端挂着闪烁的星光粒子。

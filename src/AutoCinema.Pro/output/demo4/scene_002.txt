@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A flat 2D animation still of cute anthropomorphic kitten Pipi. Cartoon style, clean bold outlines, solid cel-shaded colors, vector art aesthetic. Pipi has cream and orange fur patches simplified into color blocks, huge expressive green cartoon eyes, big ears, wearing a simple red scarf with stylized yellow star shapes, and a large fluffy striped tail. Standing pose. The background is a simplified graphic galaxy with flat planetary shapes and stars. No photorealism, no 3D textures, no gradients., 罐头飞船降落在月球背面的灰色岩石地面上，周围布满了环形山。皮皮从飞船里跳出来，红色围巾在风中飘动，尾巴高高竖起，好奇地四处张望。月球表面的光线柔和，远处有淡淡的星光洒落。
+
+[Speech Text]
+咦，前面就是月球啦！我要去背面看看，说不定会有惊喜呢！

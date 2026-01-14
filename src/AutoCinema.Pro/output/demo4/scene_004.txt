@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A flat 2D animation still of cute anthropomorphic kitten Pipi. Cartoon style, clean bold outlines, solid cel-shaded colors, vector art aesthetic. Pipi has cream and orange fur patches simplified into color blocks, huge expressive green cartoon eyes, big ears, wearing a simple red scarf with stylized yellow star shapes, and a large fluffy striped tail. Standing pose. The background is a simplified graphic galaxy with flat planetary shapes and stars. No photorealism, no 3D textures, no gradients., 机器人将一块发光的能量电池递给皮皮，电池发出蓝绿色的光芒。皮皮双手接过电池，脸上露出开心的笑容，尾巴轻轻摇摆。周围的星光和电池的光芒交织在一起，营造出梦幻的氛围。
+
+[Speech Text]
+谢谢你送我的能量电池！它闪闪发光，感觉充满了力量！我会带着它继续冒险的！

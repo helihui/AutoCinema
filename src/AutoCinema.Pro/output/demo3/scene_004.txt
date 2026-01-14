@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A cute orange fox with big ears, wearing a red scarf, anthropomorphic, fluffy tail, 小狐狸站在溪边的土坡上，背包带子紧紧系在肩上，尾巴高高竖起，耳朵向后贴，正迈开步子向远处的山顶奔跑。背景中可以看到覆盖着绿色植被的山顶轮廓，阳光照亮他的背影，红色围巾在风中飘扬，老乌龟则在溪边微笑着目送他离开。
+
+[Speech Text]
+小狐狸眼睛一亮，连忙向老乌龟道谢：‘谢谢您的指引！’他重新背上背包，尾巴高高翘起，朝着远处云雾缭绕的山顶方向跑去，脚步里充满了期待。

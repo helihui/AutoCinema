@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A flat 2D animation still of cute anthropomorphic kitten Pipi. Cartoon style, clean bold outlines, solid cel-shaded colors, vector art aesthetic. Pipi has cream and orange fur patches simplified into color blocks, huge expressive green cartoon eyes, big ears, wearing a simple red scarf with stylized yellow star shapes, and a large fluffy striped tail. Standing pose. The background is a simplified graphic galaxy with flat planetary shapes and stars. No photorealism, no 3D textures, no gradients., 机器人坐在一块大岩石上，手里拿着一根长长的钓竿，钓线伸向夜空中闪烁的星星。皮皮跑到机器人身边，歪着头看着钓竿，耳朵竖起。机器人的身体是银色的，眼睛是蓝色的LED灯，钓竿上挂着一个小篮子，里面装着几颗发光的星星。
+
+[Speech Text]
+哇，这里有个机器人在钓星光！你好呀，机器人朋友！

@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A cute orange fox with big ears, wearing a red scarf, anthropomorphic, fluffy tail, 小溪边的鹅卵石滩上，小狐狸蹲在水边，前爪正要触碰清澈的溪水。不远处，一只老乌龟正缓慢地从一块覆盖着青苔的石头后面爬出来，龟壳上布满了岁月的痕迹，眼睛微微眯起，显得十分睿智。阳光洒在溪面上，反射出细碎的光点，周围的植物在微风中轻轻摇曳。
+
+[Speech Text]
+小狐狸走到溪边，蹲下身正准备捧起溪水，突然听到一阵缓慢的声音传来。他抬头一看，只见一只背着厚重龟壳的老乌龟正慢悠悠地从石头后面爬出来，眼神里透着岁月的智慧。老乌龟告诉小狐狸，在遥远的山顶上，藏着一个神秘的宝藏。

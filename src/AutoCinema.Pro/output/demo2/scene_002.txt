@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A cute orange fox with big ears, wearing a red scarf, anthropomorphic, fluffy tail, 茂密的树林中，高大的树木枝叶繁茂，几乎遮蔽了天空。小狐狸正小心翼翼地穿过树丛，前爪踩在厚厚的落叶上。他的目光被前方吸引，一条清澈的小溪从林间流过，溪水在阳光的照射下波光粼粼，水面反射出耀眼的光芒。溪边生长着绿色的蕨类植物和五颜六色的野花，蝴蝶在花丛中飞舞。
+
+[Speech Text]
+小狐狸穿梭在茂密的树林间，脚下的落叶发出沙沙的声响。突然，他停下脚步，眼前出现了一条蜿蜒的小溪，溪水在阳光的照耀下闪烁着银色的光芒，仿佛镶嵌在林间的一条宝石项链。

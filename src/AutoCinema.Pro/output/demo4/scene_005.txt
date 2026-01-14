@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A flat 2D animation still of cute anthropomorphic kitten Pipi. Cartoon style, clean bold outlines, solid cel-shaded colors, vector art aesthetic. Pipi has cream and orange fur patches simplified into color blocks, huge expressive green cartoon eyes, big ears, wearing a simple red scarf with stylized yellow star shapes, and a large fluffy striped tail. Standing pose. The background is a simplified graphic galaxy with flat planetary shapes and stars. No photorealism, no 3D textures, no gradients., 皮皮回到罐头飞船里，将能量电池插入控制台，飞船的仪表盘亮起绿色的灯光。皮皮坐在驾驶座上，爪子握着操纵杆，眼睛坚定地望向窗外。飞船缓缓起飞，朝着银河系深处飞去，背景是浩瀚的星空和遥远的星系。
+
+[Speech Text]
+能量满格！我要继续飞向银河系深处，看看那里有什么神奇的地方！再见啦，机器人朋友！

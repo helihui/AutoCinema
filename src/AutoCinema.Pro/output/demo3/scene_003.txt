@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A cute orange fox with big ears, wearing a red scarf, anthropomorphic, fluffy tail, 溪边长满青苔的灰色圆石上，老乌龟蜷缩着四肢，龟壳上有岁月留下的深绿色纹路。小狐狸坐在旁边的草地上，身体微微前倾，耳朵专注地朝向老乌龟，红色围巾垂在胸前，阳光斜照在他们身上，营造出温暖宁静的氛围。
+
+[Speech Text]
+溪边的圆石上趴着一只老乌龟，龟壳上布满深绿色的纹路。他缓缓睁开眼睛，声音低沉而温和：‘年轻的旅行者，山顶的古老橡树下藏着能带来快乐的宝藏。’

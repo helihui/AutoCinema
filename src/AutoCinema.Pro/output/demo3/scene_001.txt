@@ -1,0 +1,5 @@
+[Visual Prompt]
+Cinematic, high quality, detailed, professional lighting, A cute orange fox with big ears, wearing a red scarf, anthropomorphic, fluffy tail, 阳光明媚的森林清晨，金色光线穿透翠绿的树叶缝隙，在铺满落叶的小路上形成斑驳光影。小狐狸背着棕色帆布背包，耳朵微微竖起，尾巴蓬松地随着步伐摆动，正迈步穿过茂密的橡树林，周围是高大的树木和鲜嫩的蕨类植物。
+
+[Speech Text]
+清晨的阳光透过树叶洒在林间小道上，小狐狸背着帆布背包，尾巴轻轻扫过地面的落叶，脚步轻快地向森林深处走去。
