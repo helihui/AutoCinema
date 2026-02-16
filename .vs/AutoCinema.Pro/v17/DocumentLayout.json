@@ -1,0 +1,103 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|e:\\100.work\\nestcoreproject\\autocinema\\src\\autocinema.desktop\\views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|solutionrelative:src\\autocinema.desktop\\views\\mainwindow.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|e:\\100.work\\nestcoreproject\\autocinema\\src\\autocinema.desktop\\app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}",
+      "RelativeMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|solutionrelative:src\\autocinema.desktop\\app.axaml||{6D5344A2-2FCD-49DE-A09D-6A14FD1B1224}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|e:\\100.work\\nestcoreproject\\autocinema\\src\\autocinema.desktop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|solutionrelative:src\\autocinema.desktop\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|e:\\100.work\\nestcoreproject\\autocinema\\src\\autocinema.desktop\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|solutionrelative:src\\autocinema.desktop\\app.manifest||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|e:\\100.work\\nestcoreproject\\autocinema\\src\\autocinema.desktop\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{2C27137A-10E2-4F64-9422-1F91EE525F65}|src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj|solutionrelative:src\\autocinema.desktop\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.axaml",
+              "DocumentMoniker": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\Views\\MainWindow.axaml",
+              "RelativeDocumentMoniker": "src\\AutoCinema.Desktop\\Views\\MainWindow.axaml",
+              "ToolTip": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\Views\\MainWindow.axaml",
+              "RelativeToolTip": "src\\AutoCinema.Desktop\\Views\\MainWindow.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-02-14T10:53:12.788Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\Program.cs",
+              "RelativeDocumentMoniker": "src\\AutoCinema.Desktop\\Program.cs",
+              "ToolTip": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\Program.cs",
+              "RelativeToolTip": "src\\AutoCinema.Desktop\\Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-14T10:52:50.832Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "app.manifest",
+              "DocumentMoniker": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\app.manifest",
+              "RelativeDocumentMoniker": "src\\AutoCinema.Desktop\\app.manifest",
+              "ToolTip": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\app.manifest",
+              "RelativeToolTip": "src\\AutoCinema.Desktop\\app.manifest",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001203|",
+              "WhenOpened": "2026-02-14T10:52:49.236Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\appsettings.json",
+              "RelativeDocumentMoniker": "src\\AutoCinema.Desktop\\appsettings.json",
+              "ToolTip": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\appsettings.json",
+              "RelativeToolTip": "src\\AutoCinema.Desktop\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAADwvwAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-02-14T10:52:46.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.axaml",
+              "DocumentMoniker": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\App.axaml",
+              "RelativeDocumentMoniker": "src\\AutoCinema.Desktop\\App.axaml",
+              "ToolTip": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\App.axaml",
+              "RelativeToolTip": "src\\AutoCinema.Desktop\\App.axaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-02-14T10:52:37.845Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

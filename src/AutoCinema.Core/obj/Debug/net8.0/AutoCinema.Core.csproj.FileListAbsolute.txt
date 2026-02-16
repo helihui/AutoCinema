@@ -1,0 +1,13 @@
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\bin\Debug\net8.0\AutoCinema.Core.deps.json
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\bin\Debug\net8.0\AutoCinema.Core.dll
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\bin\Debug\net8.0\AutoCinema.Core.pdb
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.csproj.AssemblyReference.cache
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.GeneratedMSBuildEditorConfig.editorconfig
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.AssemblyInfoInputs.cache
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.AssemblyInfo.cs
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.csproj.CoreCompileInputs.cache
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.sourcelink.json
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.dll
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\refint\AutoCinema.Core.dll
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.pdb
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\ref\AutoCinema.Core.dll

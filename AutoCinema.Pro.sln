@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B0D79076-7CF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCinema.Pro", "src\AutoCinema.Pro\AutoCinema.Pro.csproj", "{06A68690-8D4D-4A39-BF85-C4D4F2BD66D9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCinema.Core", "src\AutoCinema.Core\AutoCinema.Core.csproj", "{7276C496-86CF-4CDA-9486-FD7407046467}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoCinema.Desktop", "src\AutoCinema.Desktop\AutoCinema.Desktop.csproj", "{2C27137A-10E2-4F64-9422-1F91EE525F65}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +24,18 @@ Global
 		{06A68690-8D4D-4A39-BF85-C4D4F2BD66D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A68690-8D4D-4A39-BF85-C4D4F2BD66D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A68690-8D4D-4A39-BF85-C4D4F2BD66D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7276C496-86CF-4CDA-9486-FD7407046467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7276C496-86CF-4CDA-9486-FD7407046467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7276C496-86CF-4CDA-9486-FD7407046467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7276C496-86CF-4CDA-9486-FD7407046467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C27137A-10E2-4F64-9422-1F91EE525F65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C27137A-10E2-4F64-9422-1F91EE525F65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C27137A-10E2-4F64-9422-1F91EE525F65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C27137A-10E2-4F64-9422-1F91EE525F65}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{06A68690-8D4D-4A39-BF85-C4D4F2BD66D9} = {B0D79076-7CF9-4439-A752-94290A7A3C6C}
+		{7276C496-86CF-4CDA-9486-FD7407046467} = {B0D79076-7CF9-4439-A752-94290A7A3C6C}
+		{2C27137A-10E2-4F64-9422-1F91EE525F65} = {B0D79076-7CF9-4439-A752-94290A7A3C6C}
 	EndGlobalSection
 EndGlobal

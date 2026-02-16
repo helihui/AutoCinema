@@ -29,6 +29,11 @@ graph TB
     subgraph Application ["应用程序入口"]
         Program[Program.cs]:::core
         Config[appsettings.json]:::core
+        Endpoints[Endpoints]:::service
+    end
+
+    subgraph ProjectLayer ["项目管理"]
+        ProjectService[ProjectService]:::service
     end
 
     subgraph Pipeline ["核心流水线"]
@@ -56,7 +61,9 @@ graph TB
 
     %% 依赖关系
     Program --> Config
-    Program --> VideoPipeline
+    Program --> Endpoints
+    Endpoints --> ProjectService
+    ProjectService --> VideoPipeline
     
     VideoPipeline --> StoryboardService
     VideoPipeline --> ImageService
@@ -107,15 +114,20 @@ AutoCinema/
 │   │   │   ├── VolcengineOptions.cs
 │   │   │   ├── MiniMaxOptions.cs
 │   │   │   └── PipelineOptions.cs
+│   │   ├── Endpoints/               # API 接口入口
+│   │   │   └── VideoEndpoints.cs
 │   │   ├── Infrastructure/          # 基础设施
 │   │   │   └── Resilience/
 │   │   │       └── PollyPolicies.cs # 重试策略
 │   │   ├── Models/                  # 领域模型
 │   │   │   ├── VideoProject.cs      # 视频项目
+│   │   │   ├── ProjectState.cs      # 项目状态
 │   │   │   ├── Storyboard.cs        # 分镜脚本
 │   │   │   ├── Scene.cs             # 场景
 │   │   │   └── GeneratedAsset.cs    # 生成的素材
 │   │   ├── Services/
+│   │   │   ├── IProjectService.cs   # 项目管理服务
+│   │   │   ├── ProjectService.cs
 │   │   │   ├── Director/            # 导演层服务
 │   │   │   │   ├── IStoryboardService.cs
 │   │   │   │   ├── StoryboardService.cs
@@ -251,9 +263,23 @@ var outputPath = await pipeline.ProduceAsync(project, progress);
 Console.WriteLine($"视频已生成: {outputPath}");
 ```
 
-### 输出示例
+### Web API 用法
 
-程序运行时会显示详细的进度信息:
+AutoCinema.Pro 默认在微服务模式下运行。启动后可通过 HTTP 调用：
+
+```bash
+# 提交任务
+curl -X POST http://localhost:5000/api/videos `
+     -H "Content-Type: application/json" `
+     -d '{"projectId":"p1", "title":"测试", "rawStoryText":"故事..."}'
+
+# 查询进度
+curl http://localhost:5000/api/videos/p1/progress
+```
+
+详细 API 说明请参考：[API.md](API.md)
+
+### 命令行控制台输出示例
 
 ```
 ╔════════════════════════════════════════════════════════╗
@@ -415,7 +441,7 @@ A: 系统会自动降级到占位图模式,检查:
 ## 📝 开发路线图
 
 - [ ] 支持更多 LLM 提供商 (OpenAI, Anthropic, etc.)
-- [ ] 添加 Web API 接口
+- [x] 添加 Web API 接口 (2026-02-14)
 - [ ] 实现背景音乐混音功能
 - [ ] 支持更多视频转场效果
 - [ ] 添加视频模板系统
