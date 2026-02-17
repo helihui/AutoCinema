@@ -1,4 +1,5 @@
 using AutoCinema.Pro.Pipeline;
+using AutoCinema.Pro.Pipeline.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace AutoCinema.Pro.Pipeline.Steps;
@@ -67,5 +68,22 @@ public abstract class BasePipelineStep<TInput, TOutput> : IPipelineStep<TInput, 
             Step = step,
             Percentage = percentage
         });
+    }
+
+    /// <summary>
+    /// 验证输入
+    /// </summary>
+    /// <remarks>
+    /// 子类可以重写此方法添加特定的验证逻辑
+    /// </remarks>
+    protected virtual void ValidateInput(TInput input)
+    {
+        if (input == null)
+        {
+            throw new StepValidationException(
+                StepName,
+                "输入不能为 null",
+                nameof(input));
+        }
     }
 }

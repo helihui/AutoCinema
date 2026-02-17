@@ -1,6 +1,11 @@
 using AutoCinema.Pro.Configuration;
 using AutoCinema.Pro.Models;
+using AutoCinema.Pro.Pipeline.Cache;
+using AutoCinema.Pro.Pipeline.Configuration;
+using AutoCinema.Pro.Pipeline.Metrics;
+using AutoCinema.Pro.Pipeline.Models;
 using AutoCinema.Pro.Pipeline.Steps;
+using AutoCinema.Pro.Pipeline.Visualization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -12,24 +17,27 @@ namespace AutoCinema.Pro.Pipeline;
 /// </summary>
 public class VideoProductionPipeline : IVideoProductionPipeline
 {
+    private readonly ILogger<VideoProductionPipeline> _logger;
+    private readonly PipelineConfigurationLoader _configLoader;
     private readonly StoryboardParsingStep _storyboardParsingStep;
-    private readonly AssetGenerationStep _assetGenerationStep;
+    private readonly AssetAggregationStep _assetAggregationStep;
     private readonly SubtitleGenerationStep _subtitleGenerationStep;
     private readonly VideoCompositionStep _videoCompositionStep;
-    private readonly ILogger<VideoProductionPipeline> _logger;
 
     public VideoProductionPipeline(
+        ILogger<VideoProductionPipeline> logger,
+        PipelineConfigurationLoader configLoader,
         StoryboardParsingStep storyboardParsingStep,
-        AssetGenerationStep assetGenerationStep,
+        AssetAggregationStep assetAggregationStep,
         SubtitleGenerationStep subtitleGenerationStep,
-        VideoCompositionStep videoCompositionStep,
-        ILogger<VideoProductionPipeline> logger)
+        VideoCompositionStep videoCompositionStep)
     {
+        _logger = logger;
+        _configLoader = configLoader;
         _storyboardParsingStep = storyboardParsingStep;
-        _assetGenerationStep = assetGenerationStep;
+        _assetAggregationStep = assetAggregationStep;
         _subtitleGenerationStep = subtitleGenerationStep;
         _videoCompositionStep = videoCompositionStep;
-        _logger = logger;
     }
 
     public Task<string> ProduceAsync(VideoProject project, CancellationToken ct = default)
@@ -65,10 +73,26 @@ public class VideoProductionPipeline : IVideoProductionPipeline
                 }
             };
 
+            // 加载 Pipeline 配置
+            var configPath = Path.Combine(
+                AppDomain.CurrentDomain.BaseDirectory,
+                "pipeline.json");
+            var config = await _configLoader.LoadFromFileAsync(configPath);
+
+            _logger.LogInformation("Pipeline 配置: {ConfigName} (v{Version})", config.Name, config.Version);
+
+            // 启用步骤缓存 (断点续传)
+            var cacheDir = Path.Combine(project.OutputDirectory, ".cache");
+            context.SetCache(new FileStepCache<VideoProject, StoryboardResult>(cacheDir, _logger));
+            context.SetCache(new FileStepCache<StoryboardResult, AssetGenerationResult>(cacheDir, _logger));
+            context.SetCache(new FileStepCache<AssetGenerationResult, SubtitleGenerationResult>(cacheDir, _logger));
+            context.SetCache(new FileStepCache<SubtitleGenerationResult, VideoCompositionResult>(cacheDir, _logger));
+
             // 使用类型安全的 Pipeline Builder 执行所有步骤
+            // 注意: 由于类型链式特性,步骤顺序是固定的,配置主要用于记录和未来扩展
             var result = await new PipelineBuilder<VideoProject>()
                 .AddStep(_storyboardParsingStep)   // VideoProject -> StoryboardResult
-                .AddStep(_assetGenerationStep)     // StoryboardResult -> AssetGenerationResult
+                .AddStep(_assetAggregationStep)     // StoryboardResult -> AssetGenerationResult
                 .AddStep(_subtitleGenerationStep)  // AssetGenerationResult -> SubtitleGenerationResult
                 .AddStep(_videoCompositionStep)    // SubtitleGenerationResult -> VideoCompositionResult
                 .ExecuteAsync(context, ct);
@@ -78,15 +102,28 @@ public class VideoProductionPipeline : IVideoProductionPipeline
             progress?.Report(new ProductionProgress
             {
                 Stage = "完成",
-                Step = "视频已生成",
+                Step = "视频生成完成",
                 Percentage = 100
             });
 
+            // 生成性能报告
+            var report = new PipelineExecutionReport(context.Metrics);
+            _logger.LogInformation(report.GenerateReport());
+
+            // 生成可视化报告
+            var visualizer = new PipelineVisualizer();
+            var visualReport = visualizer.GenerateFullReport(report, context.Metrics);
+
+            // 保存到文件
+            var reportPath = Path.Combine(project.OutputDirectory, "pipeline_report.md");
+            await File.WriteAllTextAsync(reportPath, visualReport);
+
+            _logger.LogInformation("可视化报告已保存: {ReportPath}", reportPath);
+
             _logger.LogInformation("========================================");
-            _logger.LogInformation("视频生产完成!");
-            _logger.LogInformation("输出路径: {Path}", result.OutputPath);
-            _logger.LogInformation("文件大小: {Size:N0} bytes", result.FileSize);
-            _logger.LogInformation("总耗时: {Elapsed:mm\\:ss}", elapsed);
+            _logger.LogInformation("视频生成成功!");
+            _logger.LogInformation("输出路径: {OutputPath}", result.OutputPath);
+            _logger.LogInformation("总耗时: {Elapsed}", elapsed);
             _logger.LogInformation("========================================");
 
             return result.OutputPath;

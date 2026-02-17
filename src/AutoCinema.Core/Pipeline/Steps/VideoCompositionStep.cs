@@ -35,7 +35,9 @@ public class VideoCompositionStep : BasePipelineStep<SubtitleGenerationResult, V
         LogStepStart(context);
         ReportProgress(context, "剪辑阶段", "合成视频", 85);
 
-        context.Logger.LogInformation("阶段 4/4: 合成视频...");
+        context.Logger.LogInformation(
+            "开始视频合成阶段: Stage={Stage}, TotalStages={TotalStages}",
+            4, 4);
 
         var outputPath = Path.Combine(
             context.Project.OutputDirectory,
@@ -47,7 +49,9 @@ public class VideoCompositionStep : BasePipelineStep<SubtitleGenerationResult, V
         var fileInfo = new FileInfo(outputPath);
         var fileSize = fileInfo.Exists ? fileInfo.Length : 0;
 
-        context.Logger.LogInformation("视频合成完成: {Path} ({Size:N0} bytes)", outputPath, fileSize);
+        context.Logger.LogInformation(
+            "视频合成完成: OutputPath={OutputPath}, FileSize={FileSize}",
+            outputPath, fileSize);
 
         LogStepComplete(context);
 

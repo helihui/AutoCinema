@@ -3,25 +3,27 @@ using AutoCinema.Pro.Pipeline.Models;
 using AutoCinema.Pro.Services.Actor;
 using AutoCinema.Pro.Services.Editor;
 using Microsoft.Extensions.Logging;
+using System.Threading;
 
 namespace AutoCinema.Pro.Pipeline.Steps;
 
 /// <summary>
-/// 素材生成步骤
+/// 素材聚合步骤
 /// </summary>
 /// <remarks>
 /// <para>输入: StoryboardResult (故事板解析结果)</para>
-/// <para>输出: AssetGenerationResult (生成的图片和音频素材)</para>
+/// <para>输出: AssetGenerationResult (素材生成结果)</para>
+/// <para>职责: 并行调用图片和音频生成,聚合结果</para>
 /// <para>前置步骤: StoryboardParsingStep</para>
 /// <para>后续步骤: SubtitleGenerationStep</para>
 /// </remarks>
-public class AssetGenerationStep : BasePipelineStep<StoryboardResult, AssetGenerationResult>
+public class AssetAggregationStep : BasePipelineStep<StoryboardResult, AssetGenerationResult>
 {
     private readonly IImageGenerationService _imageService;
     private readonly ISpeechGenerationService _speechService;
     private readonly IAudioAnalysisService _audioService;
 
-    public AssetGenerationStep(
+    public AssetAggregationStep(
         IImageGenerationService imageService,
         ISpeechGenerationService speechService,
         IAudioAnalysisService audioService)
@@ -31,9 +33,9 @@ public class AssetGenerationStep : BasePipelineStep<StoryboardResult, AssetGener
         _audioService = audioService;
     }
 
-    public override string StepName => "素材生成";
+    public override string StepName => "素材聚合";
 
-    // 支持重试,因为网络请求可能失败
+    // 支持重试
     public override bool CanRetry => true;
     public override int MaxRetries => 3;
 

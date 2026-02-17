@@ -36,14 +36,18 @@ public class StoryboardParsingStep : BasePipelineStep<VideoProject, StoryboardRe
         LogStepStart(context);
         ReportProgress(context, "导演阶段", "解析故事板", 5);
 
-        context.Logger.LogInformation("阶段 1/4: 解析故事板...");
+        context.Logger.LogInformation(
+            "开始故事板解析阶段: Stage={Stage}, TotalStages={TotalStages}",
+            1, 4);
 
         var storyboard = await _storyboardService.ParseAsync(
             input.RawStoryText,
             input.BaseVisualStyle,
             ct);
 
-        context.Logger.LogInformation("解析完成,共 {Count} 个场景", storyboard.Scenes.Count);
+        context.Logger.LogInformation(
+            "故事板解析完成: SceneCount={SceneCount}",
+            storyboard.Scenes.Count);
 
         LogStepComplete(context);
 

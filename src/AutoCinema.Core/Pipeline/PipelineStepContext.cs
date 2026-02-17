@@ -1,4 +1,6 @@
 using AutoCinema.Pro.Models;
+using AutoCinema.Pro.Pipeline.Cache;
+using AutoCinema.Pro.Pipeline.Metrics;
 using Microsoft.Extensions.Logging;
 
 namespace AutoCinema.Pro.Pipeline;
@@ -33,4 +35,37 @@ public class PipelineStepContext
     /// 用于在步骤间传递临时数据,例如中间结果、配置等
     /// </remarks>
     public Dictionary<string, object> SharedData { get; set; } = new();
+
+    /// <summary>
+    /// 步骤执行指标集合
+    /// </summary>
+    /// <remarks>
+    /// 用于收集每个步骤的性能数据,便于分析和优化
+    /// </remarks>
+    public List<StepExecutionMetrics> Metrics { get; } = new();
+
+    /// <summary>
+    /// 缓存字典
+    /// </summary>
+    private readonly Dictionary<Type, object> _caches = new();
+
+    /// <summary>
+    /// 设置步骤缓存
+    /// </summary>
+    public void SetCache<TInput, TOutput>(IStepCache<TInput, TOutput> cache)
+    {
+        var key = typeof(IStepCache<TInput, TOutput>);
+        _caches[key] = cache;
+    }
+
+    /// <summary>
+    /// 获取步骤缓存
+    /// </summary>
+    public IStepCache<TInput, TOutput>? GetCache<TInput, TOutput>()
+    {
+        var key = typeof(IStepCache<TInput, TOutput>);
+        return _caches.TryGetValue(key, out var cache)
+            ? (IStepCache<TInput, TOutput>)cache
+            : null;
+    }
 }

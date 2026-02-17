@@ -36,12 +36,16 @@ public class SubtitleGenerationStep : BasePipelineStep<AssetGenerationResult, Su
         LogStepStart(context);
         ReportProgress(context, "剪辑阶段", "生成字幕", 80);
 
-        context.Logger.LogInformation("阶段 3/4: 生成字幕...");
+        context.Logger.LogInformation(
+            "开始字幕生成阶段: Stage={Stage}, TotalStages={TotalStages}",
+            3, 4);
 
         var subtitlePath = Path.Combine(context.Project.OutputDirectory, "subtitles.srt");
         await _subtitleService.GenerateSrtAsync(input.Assets, subtitlePath, ct);
 
-        context.Logger.LogInformation("字幕生成完成: {Path}", subtitlePath);
+        context.Logger.LogInformation(
+            "字幕生成完成: SubtitlePath={SubtitlePath}, SubtitleCount={SubtitleCount}",
+            subtitlePath, input.Assets.Length);
 
         LogStepComplete(context);
 

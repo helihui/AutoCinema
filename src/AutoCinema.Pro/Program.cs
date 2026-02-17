@@ -3,6 +3,7 @@ using AutoCinema.Pro.Data;
 using AutoCinema.Pro.Endpoints;
 using AutoCinema.Pro.Models;
 using AutoCinema.Pro.Pipeline;
+using AutoCinema.Pro.Pipeline.Configuration;
 using AutoCinema.Pro.Pipeline.Steps;
 using AutoCinema.Pro.Services;
 using AutoCinema.Pro.Services.Actor;
@@ -119,12 +120,16 @@ public class Program
         services.AddSingleton<IVideoCompositionService, FFMpegVideoService>();
 
         // 注册 Pipeline 步骤
-        services.AddSingleton<StoryboardParsingStep>();
-        services.AddSingleton<AssetGenerationStep>();
-        services.AddSingleton<SubtitleGenerationStep>();
-        services.AddSingleton<VideoCompositionStep>();
+        services.AddScoped<StoryboardParsingStep>();
+        services.AddScoped<AssetAggregationStep>();
+        services.AddScoped<SubtitleGenerationStep>();
+        services.AddScoped<VideoCompositionStep>();
 
-        services.AddSingleton<IVideoProductionPipeline, VideoProductionPipeline>();
+        // 注册 Pipeline 配置
+        services.AddSingleton<PipelineConfigurationLoader>();
+
+        // 注册 Pipeline
+        services.AddScoped<VideoProductionPipeline>();
 
         // 注册新增加的项目管理服务
         services.AddSingleton<IProjectService, ProjectService>();
