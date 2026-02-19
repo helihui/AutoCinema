@@ -31,7 +31,7 @@ public class VolcengineTtsService : ISpeechGenerationService
         _retryPolicy = PollyPolicies.GetSpeechGenerationPolicy();
     }
 
-    public async Task<string> GenerateAsync(string text, string outputPath, CancellationToken ct = default)
+    public async Task<string> GenerateAsync(string text, string outputPath, Models.VoiceGenerationConfig? config = null, CancellationToken ct = default)
     {
         _logger.LogDebug("开始生成语音: {Text}", text[..Math.Min(30, text.Length)] + "...");
 
@@ -49,11 +49,11 @@ public class VolcengineTtsService : ISpeechGenerationService
             },
             Audio = new VolcengineTtsAudio
             {
-                VoiceType = _options.VoiceType,
+                VoiceType = config?.VoiceId ?? _options.VoiceType,
                 Encoding = _options.Encoding,
-                SpeedRatio = _options.SpeedRatio,
+                SpeedRatio = config?.Speed ?? _options.SpeedRatio,
                 VolumeRatio = _options.VolumeRatio,
-                PitchRatio = _options.PitchRatio
+                PitchRatio = _options.PitchRatio // Pitch scale differs, keeping default
             },
             Request = new VolcengineTtsRequestInfo
             {
@@ -141,7 +141,7 @@ internal class VolcengineTtsApp
 {
     [JsonPropertyName("appid")]
     public required string AppId { get; set; }
-    
+
     public required string Token { get; set; }
     public required string Cluster { get; set; }
 }
@@ -155,15 +155,15 @@ internal class VolcengineTtsAudio
 {
     [JsonPropertyName("voice_type")]
     public required string VoiceType { get; set; }
-    
+
     public required string Encoding { get; set; }
-    
+
     [JsonPropertyName("speed_ratio")]
     public double SpeedRatio { get; set; }
-    
+
     [JsonPropertyName("volume_ratio")]
     public double VolumeRatio { get; set; }
-    
+
     [JsonPropertyName("pitch_ratio")]
     public double PitchRatio { get; set; }
 }
@@ -172,17 +172,17 @@ internal class VolcengineTtsRequestInfo
 {
     [JsonPropertyName("reqid")]
     public required string ReqId { get; set; }
-    
+
     public required string Text { get; set; }
-    
+
     [JsonPropertyName("text_type")]
     public required string TextType { get; set; }
-    
+
     public required string Operation { get; set; }
-    
+
     [JsonPropertyName("with_frontend")]
     public int WithFrontend { get; set; }
-    
+
     [JsonPropertyName("frontend_type")]
     public required string FrontendType { get; set; }
 }

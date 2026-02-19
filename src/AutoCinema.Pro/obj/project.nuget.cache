@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WMx4Mv/TvL8=",
+  "dgSpecHash": "+D6Qi3aosT8=",
   "success": true,
-  "projectFilePath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
+  "projectFilePath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\ffmpegcore\\5.1.0\\ffmpegcore.5.1.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\instances\\3.0.0\\instances.3.0.0.nupkg.sha512",

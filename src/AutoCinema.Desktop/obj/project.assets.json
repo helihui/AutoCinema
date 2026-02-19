@@ -7548,6 +7548,7 @@
     "net8.0": [
       "AutoCinema.Core >= 1.0.0",
       "Avalonia >= 11.0.10",
+      "Avalonia.Controls.DataGrid >= 11.0.10",
       "Avalonia.Desktop >= 11.0.10",
       "Avalonia.Diagnostics >= 11.0.10",
       "Avalonia.Fonts.Inter >= 11.0.10",
@@ -7556,6 +7557,7 @@
       "Microsoft.Extensions.Configuration.Json >= 8.0.0",
       "Microsoft.Extensions.DependencyInjection >= 8.0.0",
       "Microsoft.Extensions.Logging.Console >= 8.0.0",
+      "NAudio >= 2.2.1",
       "Serilog.Extensions.Logging >= 8.0.0",
       "Serilog.Sinks.Console >= 5.0.1",
       "Serilog.Sinks.File >= 5.0.0"
@@ -7618,6 +7620,10 @@
             "target": "Package",
             "version": "[11.0.10, )"
           },
+          "Avalonia.Controls.DataGrid": {
+            "target": "Package",
+            "version": "[11.0.10, )"
+          },
           "Avalonia.Desktop": {
             "target": "Package",
             "version": "[11.0.10, )"
@@ -7649,6 +7655,10 @@
           "Microsoft.Extensions.Logging.Console": {
             "target": "Package",
             "version": "[8.0.0, )"
+          },
+          "NAudio": {
+            "target": "Package",
+            "version": "[2.2.1, )"
           },
           "Serilog.Extensions.Logging": {
             "target": "Package",

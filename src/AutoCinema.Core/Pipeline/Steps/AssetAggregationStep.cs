@@ -71,7 +71,7 @@ public class AssetAggregationStep : BasePipelineStep<StoryboardResult, AssetGene
 
             // 并行生成图片和音频
             var imageTask = _imageService.GenerateAsync(scene.VisualPrompt, imagePath, ct);
-            var audioTask = _speechService.GenerateAsync(scene.SpeechText, audioPath, ct);
+            var audioTask = _speechService.GenerateAsync(scene.SpeechText, audioPath, context.Project.VoiceConfig, ct);
 
             await Task.WhenAll(imageTask, audioTask);
 

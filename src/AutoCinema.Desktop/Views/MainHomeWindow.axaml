@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:AutoCinema.Desktop.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="AutoCinema.Desktop.Views.MainHomeWindow"
+        x:DataType="vm:MainHomeWindowViewModel"
+        Title="AutoCinema Pro"
+        Width="1000" Height="700"
+        WindowStartupLocation="CenterScreen"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.85" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Grid RowDefinitions="Auto, *">
+            <!-- Header -->
+            <Border Grid.Row="0" Padding="20">
+                <TextBlock Text="AutoCinema Pro" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1" ColumnDefinitions="*, *" Margin="40">
+                <!-- Video Generator Tile -->
+                <Button Grid.Column="0" 
+                        Margin="10" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch"
+                        Background="#2d2d2d"
+                        CornerRadius="10"
+                        Click="OpenVideoGenerator_Click">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                        <TextBlock Text="🎬" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="视频生成器" FontSize="20" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="AI 驱动的自动视频创作工具" Foreground="#aaa" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Placeholder for Future Feature -->
+                <!-- Batch Job Manager Tile -->
+                <Button Grid.Column="1" 
+                        Margin="10" 
+                        HorizontalAlignment="Stretch" 
+                        VerticalAlignment="Stretch"
+                        Background="#2d2d2d"
+                        CornerRadius="10"
+                        Click="OpenBatchJobManager_Click">
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
+                        <TextBlock Text="📋" FontSize="48" HorizontalAlignment="Center"/>
+                        <TextBlock Text="任务队列管理器" FontSize="20" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
+                        <TextBlock Text="查看和管理后台生成任务" Foreground="#aaa" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+    </Panel>
+</Window>

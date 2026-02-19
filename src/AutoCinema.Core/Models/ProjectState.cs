@@ -21,6 +21,8 @@ public record ProjectState
 {
     [Key]
     public required string ProjectId { get; init; }
+    [System.ComponentModel.DataAnnotations.Schema.NotMapped]
+    public JobType Type { get; set; } = JobType.ScriptToVideo;
     public ProjectStatus Status { get; set; } = ProjectStatus.Pending;
     public ProductionProgress? Progress { get; set; }
     public string? ResultPath { get; set; }

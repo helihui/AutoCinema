@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:AutoCinema.Desktop.ViewModels"
         xmlns:models="using:AutoCinema.Pro.Models"
+        xmlns:views="using:AutoCinema.Desktop.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="700"
@@ -53,67 +54,84 @@
             <!-- 主面板 -->
             <Border Grid.Column="1" Padding="30, 40, 30, 30">
                 <Grid RowDefinitions="Auto, *, Auto">
+                    <!-- 头部 -->
+                    <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,20">
+                        <TextBlock Text="创作新视频" FontSize="28" FontWeight="ExtraBold" Foreground="White" />
+                        <TextBlock Text="输入您的剧本，剩下的交给导演、演员和编辑。" Foreground="#888" />
+                    </StackPanel>
 
-                <!-- 头部 -->
-                <StackPanel Grid.Row="0" Spacing="5" Margin="0,0,0,20">
-                    <TextBlock Text="创作新视频" FontSize="28" FontWeight="ExtraBold" Foreground="White"/>
-                    <TextBlock Text="输入您的剧本，剩下的交给导演、演员和编辑。" Foreground="#888"/>
-                </StackPanel>
-
-                <!-- 内容区 -->
-                <Border Grid.Row="1" Background="#252525" CornerRadius="12" Padding="20">
-                    <Grid RowDefinitions="Auto, *, Auto">
-                        <TextBox Grid.Row="0" Text="{Binding ProjectTitle}" Watermark="项目标题" Margin="0,0,0,15" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="10"/>
-                        <TextBox Grid.Row="1" Text="{Binding StoryText}" Watermark="在这里输入您的创意故事..." AcceptsReturn="True" TextWrapping="Wrap" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="15"/>
-                        
-                        <!-- 生成按钮与配置 -->
-                        <Grid Grid.Row="2" ColumnDefinitions="*, Auto" Margin="0,15,0,0">
-                            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10">
-                                <Button Content="🎬 风格配置" 
-                                        Command="{Binding ConfigureStyleCommand}"
+                    <!-- 内容区 -->
+                    <Border Grid.Row="1" Background="#252525" CornerRadius="12" Padding="20">
+                        <Grid RowDefinitions="Auto, *, Auto, Auto">
+                            <TextBox Grid.Row="0" Text="{Binding ProjectTitle}" Watermark="项目标题" Margin="0,0,0,15" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="10"/>
+                            <TextBox Grid.Row="1" Text="{Binding StoryText}" Watermark="在这里输入您的创意故事..." AcceptsReturn="True" TextWrapping="Wrap" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="15"/>
+                            
+                            <!-- 配置项按钮 -->
+                            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="15" Margin="0,15,0,0">
+                                <Button Width="185"
+                                        Click="OpenVoiceConfig_Click"
                                         Background="#333" 
-                                        Padding="15,8"/>
+                                        CornerRadius="6" 
+                                        Padding="15,10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                        <TextBlock Text="🎙️" FontSize="16"/>
+                                        <TextBlock Text="声音配置" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="⌄" Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
+
+                                <Button Width="185"
+                                        Click="OpenStyleConfig_Click"
+                                        Background="#333" 
+                                        CornerRadius="6" 
+                                        Padding="15,10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                                        <TextBlock Text="🎭" FontSize="16"/>
+                                        <TextBlock Text="风格与角色" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <TextBlock Text="⌄" Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                                    </StackPanel>
+                                </Button>
                             </StackPanel>
 
-                            <Button Grid.Column="1" 
-                                    Command="{Binding SubmitProjectCommand}" 
-                                    IsEnabled="{Binding !IsProcessing}"
-                                    Content="开始生成视频" 
-                                    Background="#4a3aff" 
-                                    Foreground="White" 
-                                    FontWeight="Bold" 
-                                    Padding="30,12" 
-                                    CornerRadius="6">
-                                <Button.Styles>
-                                    <Style Selector="Button:pointerover /template/ ContentPresenter">
-                                        <Setter Property="Background" Value="#5a4bff"/>
-                                    </Style>
-                                </Button.Styles>
-                            </Button>
+                            <!-- 生成按钮 -->
+                            <Grid Grid.Row="3" ColumnDefinitions="*, Auto" Margin="0,25,0,0">
+                                <Button Grid.Column="1" 
+                                        Command="{Binding SubmitProjectCommand}" 
+                                        IsEnabled="{Binding !IsProcessing}"
+                                        Content="开始生成视频" 
+                                        Background="#4a3aff" 
+                                        Foreground="White" 
+                                        FontWeight="Bold" 
+                                        Padding="30,12" 
+                                        CornerRadius="6">
+                                    <Button.Styles>
+                                        <Style Selector="Button:pointerover /template/ ContentPresenter">
+                                            <Setter Property="Background" Value="#5a4bff"/>
+                                        </Style>
+                                    </Button.Styles>
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </Grid>
-                </Border>
+                    </Border>
 
-                <!-- 底部状态与进度 -->
-                <Border Grid.Row="2" Margin="0,20,0,0" IsVisible="{Binding IsProcessing}" Height="100" CornerRadius="12" Padding="15">
-                    <Border.Background>
-                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
-                            <GradientStop Offset="0" Color="#120c3e"/>
-                            <GradientStop Offset="1" Color="#0a0a0a"/>
-                        </LinearGradientBrush>
-                    </Border.Background>
-                    <Grid RowDefinitions="*, Auto">
-                        <StackPanel VerticalAlignment="Center">
-                            <TextBlock Text="{Binding StatusMessage}" Foreground="White" FontSize="14" Margin="0,0,0,8"/>
-                            <ProgressBar Value="{Binding ProgressValue}" Minimum="0" Maximum="100" Height="6" CornerRadius="3" Foreground="#4a3aff" Background="#333"/>
-                        </StackPanel>
-                        <TextBlock Grid.Row="1" Text="{Binding ProgressValue, StringFormat={}{0:F1}%}" HorizontalAlignment="Right" Foreground="#4a3aff" FontSize="12" FontWeight="Bold"/>
-                    </Grid>
-                </Border>
-            </Grid>
-        </Border>
-    </Grid>
-</Panel>
+                    <!-- 底部状态与进度 -->
+                    <Border Grid.Row="2" Margin="0,20,0,0" IsVisible="{Binding IsProcessing}" Height="100" CornerRadius="12" Padding="15">
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                                <GradientStop Offset="0" Color="#120c3e"/>
+                                <GradientStop Offset="1" Color="#0a0a0a"/>
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <Grid RowDefinitions="*, Auto">
+                            <StackPanel VerticalAlignment="Center">
+                                <TextBlock Text="{Binding StatusMessage}" Foreground="White" FontSize="14" Margin="0,0,0,8"/>
+                                <ProgressBar Value="{Binding ProgressValue}" Minimum="0" Maximum="100" Height="6" CornerRadius="3" Foreground="#4a3aff" Background="#333"/>
+                            </StackPanel>
+                            <TextBlock Grid.Row="1" Text="{Binding ProgressValue, StringFormat={}{0:F1}%}" HorizontalAlignment="Right" Foreground="#4a3aff" FontSize="12" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+    </Panel>
 </Window>
-
-

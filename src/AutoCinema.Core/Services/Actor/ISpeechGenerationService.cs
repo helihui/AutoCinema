@@ -10,7 +10,8 @@ public interface ISpeechGenerationService
     /// </summary>
     /// <param name="text">要转换的文本</param>
     /// <param name="outputPath">输出音频文件路径</param>
+    /// <param name="config">语音生成配置(可选,若为null则使用默认配置)</param>
     /// <param name="ct">取消令牌</param>
     /// <returns>生成的音频文件路径</returns>
-    Task<string> GenerateAsync(string text, string outputPath, CancellationToken ct = default);
+    Task<string> GenerateAsync(string text, string outputPath, Models.VoiceGenerationConfig? config = null, CancellationToken ct = default);
 }

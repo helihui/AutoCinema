@@ -1,0 +1,138 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AutoCinema.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="550"
+        x:Class="AutoCinema.Desktop.Views.VoiceConfigWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="🎙️ 声音配置"
+        Width="450" Height="550"
+        WindowStartupLocation="CenterOwner"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.85" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <ScrollViewer>
+            <Border Padding="25, 45, 25, 25">
+                <StackPanel Spacing="20">
+                    <TextBlock Text="🎙️ 声音配置" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+
+                    <!-- 声音选择 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="选择声音" Foreground="#a0a0a0" FontSize="13"/>
+                        <ComboBox ItemsSource="{Binding AvailableVoices}"
+                                  SelectedItem="{Binding SelectedVoice}"
+                                  Background="#1a1a1a"
+                                  BorderThickness="1"
+                                  BorderBrush="#333"
+                                  CornerRadius="6"
+                                  Padding="12"
+                                  HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding Gender}" Foreground="#888" FontSize="11" VerticalAlignment="Center"/>
+                                        <Border Background="#4a3aff" CornerRadius="4" Padding="4,2" IsVisible="{Binding IsCloned}">
+                                            <TextBlock Text="克隆" Foreground="White" FontSize="10"/>
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- 语速调整 -->
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Grid.Column="0" Text="语速" Foreground="#a0a0a0" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding VoiceSpeed, StringFormat={}{0:F1}x}" Foreground="#4a3aff" FontSize="13" FontWeight="Bold"/>
+                        </Grid>
+                        <Slider Value="{Binding VoiceSpeed}"
+                                Minimum="0.5"
+                                Maximum="2.0"
+                                TickFrequency="0.1"
+                                IsSnapToTickEnabled="True"
+                                Foreground="#4a3aff"
+                                Background="#1a1a1a"/>
+                    </StackPanel>
+
+                    <!-- 音调调整 -->
+                    <StackPanel Spacing="8">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <TextBlock Grid.Column="0" Text="音调" Foreground="#a0a0a0" FontSize="13"/>
+                            <TextBlock Grid.Column="1" Text="{Binding VoicePitch, StringFormat={}{0:+0;-0;0}}" Foreground="#4a3aff" FontSize="13" FontWeight="Bold"/>
+                        </Grid>
+                        <Slider Value="{Binding VoicePitch}"
+                                Minimum="-12"
+                                Maximum="12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                Foreground="#4a3aff"
+                                Background="#1a1a1a"/>
+                    </StackPanel>
+
+                    <!-- 情感选择 -->
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="情感" Foreground="#a0a0a0" FontSize="13"/>
+                        <ComboBox SelectedItem="{Binding VoiceEmotion}"
+                                  ItemsSource="{Binding Emotions}"
+                                  Background="#1a1a1a"
+                                  BorderThickness="1"
+                                  BorderBrush="#333"
+                                  CornerRadius="6"
+                                  Padding="12"
+                                  HorizontalAlignment="Stretch">
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!-- 操作按钮 -->
+                    <Grid ColumnDefinitions="*, *" Margin="0,10,0,0">
+                        <Button Grid.Column="0"
+                                Content="🔊 预览声音"
+                                Command="{Binding PreviewVoiceCommand}"
+                                Background="#333"
+                                Padding="0,12"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                CornerRadius="6"
+                                Margin="0,0,7.5,0"/>
+                        <Button Grid.Column="1"
+                                Content="🎙️ 克隆声音"
+                                Command="{Binding CloneVoiceCommand}"
+                                IsVisible="{Binding SupportsVoiceCloning}"
+                                Background="#333"
+                                Padding="0,12"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                CornerRadius="6"
+                                Margin="7.5,0,0,0"/>
+                    </Grid>
+
+                    <Button Content="完成" 
+                            Click="CloseButton_Click"
+                            Background="#4a3aff" 
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Padding="0,12"
+                            Margin="0,20,0,0"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            CornerRadius="6"/>
+                </StackPanel>
+            </Border>
+        </ScrollViewer>
+    </Panel>
+</Window>

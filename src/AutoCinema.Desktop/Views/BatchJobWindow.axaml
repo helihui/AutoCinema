@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:AutoCinema.Desktop.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AutoCinema.Desktop.Views.BatchJobWindow"
+        x:DataType="vm:BatchJobWindowViewModel"
+        Title="任务生成队列"
+        Width="900" Height="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#1e1e1e">
+
+    <Design.DataContext>
+        <vm:BatchJobWindowViewModel/>
+    </Design.DataContext>
+    
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#252526" Padding="20,10" Height="60">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <StackPanel Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                    <TextBlock Text="📋" FontSize="20" VerticalAlignment="Center"/>
+                    <TextBlock Text="任务队列管理器" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White"/>
+                </StackPanel>
+
+                <!-- Queue Controls -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <Button Command="{Binding StartQueueCommand}" 
+                            IsEnabled="{Binding !IsRunning}"
+                            Background="#2da44e" Foreground="White" 
+                            Content="▶ 开始队列"
+                            Padding="15,5" CornerRadius="4"/>
+                    
+                    <Button Command="{Binding PauseQueueCommand}" 
+                            IsEnabled="{Binding IsRunning}"
+                            Background="#cf222e" Foreground="White" 
+                            Content="⏸ 暂停"
+                            Padding="15,5" CornerRadius="4"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content (Job List) -->
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Jobs}"
+                  AutoGenerateColumns="False" IsReadOnly="True"
+                  GridLinesVisibility="All"
+                  BorderThickness="1" BorderBrush="#333"
+                  Background="#1e1e1e" Foreground="White"
+                  RowBackground="#1e1e1e"
+                  HeadersVisibility="Column"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding JobId}" Width="160"/>
+                <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="120"/>
+                <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="100"/>
+                
+                <DataGridTemplateColumn Header="进度" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid ColumnDefinitions="*, Auto">
+                                <ProgressBar Value="{Binding Progress.Percentage}" Minimum="0" Maximum="100" 
+                                             Height="10" Margin="5" VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Progress.Percentage, StringFormat={}{0:F0}%}" 
+                                           VerticalAlignment="Center" Margin="5,0"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="当前步骤" Binding="{Binding Progress.Step}" Width="*"/>
+                <DataGridTextColumn Header="创建时间" Binding="{Binding CreatedAt}" Width="160"/>
+                
+                <!-- Result Column -->
+                <DataGridTemplateColumn Header="结果" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="打开" IsVisible="{Binding OutputPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    Command="{Binding $parent[Window].((vm:BatchJobWindowViewModel)DataContext).OpenResultCommand}"
+                                    CommandParameter="{Binding OutputPath}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <!-- Actions Column -->
+                <DataGridTemplateColumn Header="操作" Width="80">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="❌" Command="{Binding $parent[Window].((vm:BatchJobWindowViewModel)DataContext).RemoveJobCommand}"
+                                    CommandParameter="{Binding}"
+                                    Background="Transparent" BorderThickness="0" Foreground="#cf222e"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#007acc" Padding="10,5">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="White" FontSize="12"/>
+        </Border>
+    </Grid>
+</Window>

@@ -151,6 +151,10 @@
               "target": "Package",
               "version": "[11.0.10, )"
             },
+            "Avalonia.Controls.DataGrid": {
+              "target": "Package",
+              "version": "[11.0.10, )"
+            },
             "Avalonia.Desktop": {
               "target": "Package",
               "version": "[11.0.10, )"
@@ -182,6 +186,10 @@
             "Microsoft.Extensions.Logging.Console": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "NAudio": {
+              "target": "Package",
+              "version": "[2.2.1, )"
             },
             "Serilog.Extensions.Logging": {
               "target": "Package",

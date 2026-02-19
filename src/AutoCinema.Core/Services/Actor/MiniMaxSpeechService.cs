@@ -31,9 +31,11 @@ public class MiniMaxSpeechService : ISpeechGenerationService
         _retryPolicy = PollyPolicies.GetSpeechGenerationPolicy();
     }
 
-    public async Task<string> GenerateAsync(string text, string outputPath, CancellationToken ct = default)
+    public async Task<string> GenerateAsync(string text, string outputPath, Models.VoiceGenerationConfig? config = null, CancellationToken ct = default)
     {
-        _logger.LogDebug("开始生成语音: {Text}", text[..Math.Min(30, text.Length)] + "...");
+        _logger.LogDebug("开始生成语音: {Text} (VoiceId={VoiceId})",
+            text[..Math.Min(30, text.Length)] + "...",
+            config?.VoiceId ?? _options.VoiceId);
 
         var requestBody = new MiniMaxTtsRequest
         {
@@ -42,11 +44,11 @@ public class MiniMaxSpeechService : ISpeechGenerationService
             Stream = _options.Stream,
             VoiceSetting = new VoiceSettingDto
             {
-                VoiceId = _options.VoiceId,
-                Speed = _options.Speed,
+                VoiceId = config?.VoiceId ?? _options.VoiceId,
+                Speed = config?.Speed ?? _options.Speed,
                 Vol = _options.Volume,
-                Pitch = _options.Pitch,
-                Emotion = _options.Emotion
+                Pitch = config?.Pitch ?? _options.Pitch,
+                Emotion = (config?.Emotion ?? _options.Emotion)?.ToLower() == "neutral" ? null : (config?.Emotion ?? _options.Emotion)
             },
             AudioSetting = new AudioSettingDto
             {
@@ -161,17 +163,6 @@ internal class MiniMaxTtsResponse
 {
     public MiniMaxBaseResp? BaseResp { get; set; }
     public MiniMaxAudioData? Data { get; set; }
-}
-
-internal class MiniMaxBaseResp
-{
-    public int StatusCode { get; set; }
-    public string? StatusMsg { get; set; }
-}
-
-internal class MiniMaxAudioData
-{
-    public string? Audio { get; set; }
 }
 
 #endregion

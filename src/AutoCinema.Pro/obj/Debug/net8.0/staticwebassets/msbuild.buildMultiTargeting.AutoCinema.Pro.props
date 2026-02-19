@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\AutoCinema.Pro.props" />
-</Project>

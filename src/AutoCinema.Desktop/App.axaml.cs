@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -7,11 +7,16 @@ using AutoCinema.Pro.Configuration;
 using AutoCinema.Pro.Data;
 using AutoCinema.Pro.Models;
 using AutoCinema.Pro.Pipeline;
+using AutoCinema.Pro.Pipeline.Configuration;
+using AutoCinema.Pro.Pipeline.Steps;
 using AutoCinema.Pro.Services;
 using AutoCinema.Pro.Services.Actor;
 using AutoCinema.Pro.Services.Director;
 using AutoCinema.Pro.Services.Editor;
+using AutoCinema.Core.Services.Jobs;
+using AutoCinema.Desktop.Services;
 using AutoCinema.Desktop.ViewModels;
+
 using AutoCinema.Desktop.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -79,12 +84,12 @@ public partial class App : Application
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
-                var viewModel = Services.GetRequiredService<MainWindowViewModel>();
-                desktop.MainWindow = new MainWindow
+                var viewModel = Services.GetRequiredService<MainHomeWindowViewModel>();
+                desktop.MainWindow = new MainHomeWindow
                 {
                     DataContext = viewModel
                 };
-                Log.Information("主窗口已创建");
+                Log.Information("主窗口(MainHomeWindow)已创建");
             }
 
             Log.Information("应用程序启动成功！");
@@ -129,16 +134,38 @@ public partial class App : Application
         services.AddHttpClient<VolcengineLlmService>();
         services.AddHttpClient<IImageGenerationService, VolcengineImageService>();
         services.AddHttpClient<ISpeechGenerationService, MiniMaxSpeechService>();
+        services.AddHttpClient<IVoiceConfigurationService, MiniMaxVoiceConfigurationService>();
+        services.AddSingleton<IAudioPlayerService, NAudioPlayerService>();
 
         services.AddSingleton<IStoryboardService, StoryboardService>();
         services.AddSingleton<IAudioAnalysisService, NAudioAnalysisService>();
         services.AddSingleton<ISubtitleService, SrtSubtitleService>();
         services.AddSingleton<IVideoCompositionService, FFMpegVideoService>();
+
+        // 注册 Pipeline 步骤
+        services.AddSingleton<StoryboardParsingStep>();
+        services.AddSingleton<AssetAggregationStep>();
+        services.AddSingleton<SubtitleGenerationStep>();
+        services.AddSingleton<VideoCompositionStep>();
+
+        // 注册 Pipeline 配置
+        services.AddSingleton<PipelineConfigurationLoader>();
+
+        // 注册 Pipeline
         services.AddSingleton<IVideoProductionPipeline, VideoProductionPipeline>();
         services.AddSingleton<IProjectService, ProjectService>();
 
+        // 注册 Job Handlers
+        services.AddSingleton<IJobHandler, TextToVideoJobHandler>();
+        services.AddSingleton<IJobHandler, SlideshowJobHandler>();
+
+        // 注册 JobManager (它依赖 IEnumerable<IJobHandler>)
+        services.AddSingleton<IJobManager, JobManager>();
+
         // 注册 ViewModels
         services.AddSingleton<MainWindowViewModel>();
+        services.AddSingleton<MainHomeWindowViewModel>();
+        services.AddSingleton<BatchJobWindowViewModel>();
     }
 
     private static void ConfigureFFmpeg(IConfiguration configuration)

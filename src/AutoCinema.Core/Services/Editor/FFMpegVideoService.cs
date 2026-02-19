@@ -106,20 +106,28 @@ public class FFMpegVideoService : IVideoCompositionService
                 Directory.CreateDirectory(outputDir);
             }
 
-            // 转义字幕路径中的特殊字符
-            var escapedSubtitlePath = subtitlePath
-                .Replace("\\", "/")
-                .Replace(":", "\\:")
-                .Replace("'", @"'\''");
-
             await FFMpegArguments
                 .FromFileInput(tempMergedPath, verifyExists: true)
-                .OutputToFile(outputPath, overwrite: true, options => options
-                    .WithVideoCodec(VideoCodec.LibX264)
-                    .WithAudioCodec(AudioCodec.Aac)
-                    .WithConstantRateFactor(_options.VideoQuality)
-                    .WithFastStart()
-                    .WithCustomArgument($"-vf \"subtitles='{escapedSubtitlePath}':force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2'\""))
+                .OutputToFile(outputPath, overwrite: true, options =>
+                {
+                    options
+                        .WithVideoCodec(VideoCodec.LibX264)
+                        .WithAudioCodec(AudioCodec.Aac)
+                        .WithConstantRateFactor(_options.VideoQuality)
+                        .WithFastStart();
+
+                    // 仅在有字幕文件时添加字幕滤镜
+                    if (!string.IsNullOrWhiteSpace(subtitlePath))
+                    {
+                        // 转义字幕路径中的特殊字符
+                        var escapedSubtitlePath = subtitlePath
+                            .Replace("\\", "/")
+                            .Replace(":", "\\:")
+                            .Replace("'", @"'\''");
+
+                        options.WithCustomArgument($"-vf \"subtitles='{escapedSubtitlePath}':force_style='FontSize=24,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2'\"");
+                    }
+                })
                 .ProcessAsynchronously();
 
             _logger.LogInformation("视频合成完成: {Path}", outputPath);

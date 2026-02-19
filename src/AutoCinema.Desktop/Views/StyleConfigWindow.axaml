@@ -1,0 +1,74 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AutoCinema.Desktop.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="400"
+        x:Class="AutoCinema.Desktop.Views.StyleConfigWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="🎭 风格与角色设置"
+        Width="450" Height="400"
+        WindowStartupLocation="CenterOwner"
+        TransparencyLevelHint="AcrylicBlur"
+        Background="Transparent"
+        ExtendClientAreaToDecorationsHint="True">
+
+    <Panel>
+        <ExperimentalAcrylicBorder IsHitTestVisible="False">
+            <ExperimentalAcrylicBorder.Material>
+                <ExperimentalAcrylicMaterial
+                    BackgroundSource="Digger"
+                    TintColor="Black"
+                    TintOpacity="1"
+                    MaterialOpacity="0.85" />
+            </ExperimentalAcrylicBorder.Material>
+        </ExperimentalAcrylicBorder>
+
+        <Border Padding="25, 45, 25, 25">
+            <StackPanel Spacing="20">
+                <TextBlock Text="🎭 风格与角色设置" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="视觉风格" FontWeight="SemiBold" Foreground="#ccc" FontSize="14"/>
+                    <TextBox Text="{Binding VisualStyle}" 
+                             Watermark="例如: Cinematic, high quality, 4k..." 
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Height="80"
+                             Background="#1a1a1a" 
+                             BorderThickness="1" 
+                             BorderBrush="#333"
+                             CornerRadius="6" 
+                             Padding="12"/>
+                    <TextBlock Text="定义视频的整体视觉质感（Cinematic, Anime, 3D 等）" FontSize="11" Foreground="#666"/>
+                </StackPanel>
+
+                <StackPanel Spacing="10">
+                    <TextBlock Text="角色设定" FontWeight="SemiBold" Foreground="#ccc" FontSize="14"/>
+                    <TextBox Text="{Binding CharacterPrompt}" 
+                             Watermark="描述主角的外貌特征、穿着等..." 
+                             AcceptsReturn="True"
+                             TextWrapping="Wrap"
+                             Height="80"
+                             Background="#1a1a1a" 
+                             BorderThickness="1" 
+                             BorderBrush="#333"
+                             CornerRadius="6" 
+                             Padding="12"/>
+                    <TextBlock Text="保持角色在不同画面中的一致性描述" FontSize="11" Foreground="#666"/>
+                </StackPanel>
+
+                <Button Content="完成" 
+                        Click="CloseButton_Click"
+                        Background="#4a3aff" 
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Padding="0,12"
+                        Margin="0,10,0,0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Center"
+                        CornerRadius="6"/>
+            </StackPanel>
+        </Border>
+    </Panel>
+</Window>

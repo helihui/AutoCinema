@@ -20,5 +20,17 @@ build_property.EnableGeneratedComInterfaceComImportInterop =
 [E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/BatchJobWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainHomeWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
 [E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/StyleConfigWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/VoiceConfigWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
