@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AutoCinema.Pro.Models;
+using AutoCinema.Pro.Models.Jobs;
 using AutoCinema.Pro.Pipeline;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ public class CinemaDbContext : DbContext
     }
 
     public DbSet<ProjectState> Projects { get; set; } = null!;
+    public DbSet<AutoCinema.Pro.Models.Jobs.JobItem> Jobs { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,6 +27,36 @@ public class CinemaDbContext : DbContext
                 v => JsonSerializer.Deserialize<ProductionProgress>(v, (JsonSerializerOptions?)null)
             );
 
-        // 这里如果未来有更多复杂对象，可以按需添加转换
+        // 配置 JobItem 及其派生类 (Table-Per-Hierarchy)
+        modelBuilder.Entity<JobItem>()
+            .HasKey(j => j.JobId);
+
+        modelBuilder.Entity<JobItem>()
+            .HasDiscriminator(j => j.Type)
+            .HasValue<TextToVideoJob>(JobType.TextOnVideo)
+            .HasValue<SlideshowJob>(JobType.ImageToVideo);
+
+        modelBuilder.Entity<JobItem>()
+            .Property(j => j.Progress)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<ProductionProgress>(v, (JsonSerializerOptions?)null)
+            );
+
+        // SlideshowJob 的 Items 按 JSON 存储
+        modelBuilder.Entity<SlideshowJob>()
+            .Property(j => j.Items)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<System.Collections.Generic.List<SlideItem>>(v, (JsonSerializerOptions?)null)
+            );
+
+        // TextToVideoJob 的 ProjectData 按 JSON 存储
+        modelBuilder.Entity<TextToVideoJob>()
+            .Property(j => j.ProjectData)
+            .HasConversion(
+                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
+                v => JsonSerializer.Deserialize<VideoProject>(v, (JsonSerializerOptions?)null)
+            );
     }
 }

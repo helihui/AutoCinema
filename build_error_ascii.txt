@@ -1,0 +1,20 @@
+  Determining projects to restore...
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : warning NU1608: 检测到的包版本在依赖项约束之外: Microsoft.CodeAnalysis.CSharp.Scripting 3.8.0 需要 Microsoft.CodeAnalysis.Common (= 3.8.0)，但版本 Microsoft.CodeAnalysis.Common 4.5.0 已解决。
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : warning NU1608: 检测到的包版本在依赖项约束之外: Microsoft.CodeAnalysis.Scripting.Common 3.8.0 需要 Microsoft.CodeAnalysis.Common (= 3.8.0)，但版本 Microsoft.CodeAnalysis.Common 4.5.0 已解决。
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107: Microsoft.CodeAnalysis.CSharp 中检测到版本冲突。直接安装/引用 Microsoft.CodeAnalysis.CSharp 4.5.0 到项目 AutoCinema.Desktop 可解决此问题。 
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107:  AutoCinema.Desktop -> Microsoft.EntityFrameworkCore.Design 8.0.0 -> Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 -> Microsoft.CodeAnalysis.CSharp (= 4.5.0) 
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107:  AutoCinema.Desktop -> Avalonia.Diagnostics 11.0.10 -> Microsoft.CodeAnalysis.CSharp.Scripting 3.8.0 -> Microsoft.CodeAnalysis.CSharp (= 3.8.0).
+  未能还原 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj (用时 435 毫秒)。
+  1 个项目(共 2 个)是最新的，无法还原。
+
+生成失败。
+
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : warning NU1608: 检测到的包版本在依赖项约束之外: Microsoft.CodeAnalysis.CSharp.Scripting 3.8.0 需要 Microsoft.CodeAnalysis.Common (= 3.8.0)，但版本 Microsoft.CodeAnalysis.Common 4.5.0 已解决。
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : warning NU1608: 检测到的包版本在依赖项约束之外: Microsoft.CodeAnalysis.Scripting.Common 3.8.0 需要 Microsoft.CodeAnalysis.Common (= 3.8.0)，但版本 Microsoft.CodeAnalysis.Common 4.5.0 已解决。
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107: Microsoft.CodeAnalysis.CSharp 中检测到版本冲突。直接安装/引用 Microsoft.CodeAnalysis.CSharp 4.5.0 到项目 AutoCinema.Desktop 可解决此问题。 
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107:  AutoCinema.Desktop -> Microsoft.EntityFrameworkCore.Design 8.0.0 -> Microsoft.CodeAnalysis.CSharp.Workspaces 4.5.0 -> Microsoft.CodeAnalysis.CSharp (= 4.5.0) 
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\AutoCinema.Desktop.csproj : error NU1107:  AutoCinema.Desktop -> Avalonia.Diagnostics 11.0.10 -> Microsoft.CodeAnalysis.CSharp.Scripting 3.8.0 -> Microsoft.CodeAnalysis.CSharp (= 3.8.0).
+    2 个警告
+    1 个错误
+
+已用时间 00:00:01.02

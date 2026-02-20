@@ -11,3 +11,5 @@ E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\Auto
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\refint\AutoCinema.Core.dll
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.pdb
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\ref\AutoCinema.Core.dll
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\bin\Debug\net8.0\AutoCinema.Core.runtimeconfig.json
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Core\obj\Debug\net8.0\AutoCinema.Core.genruntimeconfig.cache

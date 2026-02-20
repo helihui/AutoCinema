@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:AutoCinema.Desktop.ViewModels"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+        x:Class="AutoCinema.Desktop.Views.SlideshowEditorWindow"
+        x:DataType="vm:SlideshowEditorViewModel"
+        Title="幻灯片编排器"
+        Width="1024" Height="768"
+        WindowStartupLocation="CenterScreen"
+        Background="#1e1e1e"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaTitleBarHeightHint="0">
+
+    <Design.DataContext>
+        <vm:SlideshowEditorViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#252526" Padding="15,10" Height="50" IsHitTestVisible="True">
+            <Grid ColumnDefinitions="Auto, *, Auto">
+                <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="🎬" FontSize="18"/>
+                    <TextBlock Text="幻灯片编排器 (Universal Asset Composer)" FontSize="14" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <Button Command="{Binding AddImagesCommand}" Background="#007acc" Foreground="White" Content="➕ 添加图片"/>
+                    <Button Command="{Binding ClearAllCommand}" Background="#d73a49" Foreground="White" Content="🗑️ 清空"/>
+                    <Button Click="CloseWindow_Click" Background="Transparent" Foreground="#aaa" Content="❌ 关"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content (Asset List) -->
+        <ListBox Grid.Row="1" ItemsSource="{Binding Items}" 
+                 Background="#1e1e1e" BorderThickness="0"
+                 Padding="20">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="#252526" CornerRadius="4" Padding="10" Margin="0,5">
+                        <Grid ColumnDefinitions="Auto, *, Auto, Auto, Auto">
+                            <!-- Thumbnail -->
+                            <Image Source="{Binding ImagePath}" Width="80" Height="45" Stretch="UniformToFill" Margin="0,0,15,0"/>
+                            
+                            <!-- Info -->
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="5">
+                                <TextBlock Text="{Binding FileName}" Foreground="White" FontWeight="Bold"/>
+                                <TextBlock Text="{Binding ImagePath}" Foreground="#888" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                            </StackPanel>
+
+                            <!-- Audio Info -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center" Margin="15,0">
+                                <TextBlock Text="🎵" IsVisible="{Binding AudioPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Foreground="#aaa" Margin="0,0,5,0"/>
+                                <TextBlock Text="No Audio" IsVisible="{Binding AudioPath, Converter={x:Static StringConverters.IsNullOrEmpty}}" Foreground="#555" FontSize="10"/>
+                            </StackPanel>
+
+                            <!-- Duration -->
+                            <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center" Spacing="5" Margin="15,0">
+                                <TextBlock Text="时长(s):" Foreground="#aaa" VerticalAlignment="Center"/>
+                                <NumericUpDown Value="{Binding Duration}" Minimum="0.1" Maximum="600" Increment="0.1" Width="80"/>
+                            </StackPanel>
+
+                            <!-- Actions -->
+                            <Button Grid.Column="4" 
+                                    Command="{Binding $parent[Window].((vm:SlideshowEditorViewModel)DataContext).RemoveItemCommand}"
+                                    CommandParameter="{Binding}"
+                                    Content="❌" Background="Transparent" Foreground="#d73a49" Margin="10,0,0,0"/>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#2d2d30" Padding="20">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Orientation="Vertical" Spacing="10">
+                    <!-- BGM -->
+                    <Grid ColumnDefinitions="Auto, *, Auto">
+                        <TextBlock Text="背景音乐:" Foreground="#ddd" VerticalAlignment="Center" Width="80"/>
+                        <TextBox Grid.Column="1" Text="{Binding BackgroundMusicPath}" IsReadOnly="True" Watermark="未选择背景音乐..." Background="#333" Foreground="White" BorderThickness="0"/>
+                        <Button Grid.Column="2" Command="{Binding SelectBackgroundMusicCommand}" Content="..." Margin="5,0,0,0"/>
+                    </Grid>
+                    
+                    <!-- Output Name -->
+                    <Grid ColumnDefinitions="Auto, *">
+                        <TextBlock Text="任务名称:" Foreground="#ddd" VerticalAlignment="Center" Width="80"/>
+                        <TextBox Grid.Column="1" Text="{Binding OutputName}" Background="#333" Foreground="White" BorderThickness="0"/>
+                    </Grid>
+                </StackPanel>
+
+                <Button Grid.Column="1" Command="{Binding CreateJobCommand}" 
+                        Background="#2da44e" Foreground="White" 
+                        FontSize="16" FontWeight="Bold" 
+                        Padding="30,10" Margin="20,0,0,0" CornerRadius="4">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <TextBlock Text="🚀"/>
+                        <TextBlock Text="创建任务"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

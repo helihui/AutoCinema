@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj": {}
+    "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj": {}
   },
   "projects": {
-    "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj": {
+    "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj",
+        "projectUniqueName": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj",
         "projectName": "AutoCinema.Core",
-        "projectPath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj",
+        "projectPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\obj\\",
+        "outputPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -52,6 +52,12 @@
             "FFMpegCore": {
               "target": "Package",
               "version": "[5.1.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )"
             },
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
@@ -98,14 +104,14 @@
         }
       }
     },
-    "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj": {
+    "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
+        "projectUniqueName": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
         "projectName": "AutoCinema.Pro",
-        "projectPath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
+        "projectPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\AutoCinema.Pro.csproj",
         "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\obj\\",
+        "outputPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Pro\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -126,8 +132,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj": {
-                "projectPath": "e:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj"
+              "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj": {
+                "projectPath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Core\\AutoCinema.Core.csproj"
               }
             }
           }

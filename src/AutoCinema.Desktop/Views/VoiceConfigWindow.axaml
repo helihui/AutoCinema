@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="450" d:DesignHeight="550"
         x:Class="AutoCinema.Desktop.Views.VoiceConfigWindow"
-        x:DataType="vm:MainWindowViewModel"
+        x:CompileBindings="False"
         Title="🎙️ 声音配置"
         Width="450" Height="550"
         WindowStartupLocation="CenterOwner"

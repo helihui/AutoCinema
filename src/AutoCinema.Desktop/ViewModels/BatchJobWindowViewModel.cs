@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks; // Added
 using System.Collections.ObjectModel;
 using AutoCinema.Pro.Models;
 using AutoCinema.Pro.Models.Jobs;
@@ -7,6 +8,10 @@ using AutoCinema.Pro.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection; // Added
+using Avalonia; // Added
+using Avalonia.Controls.ApplicationLifetimes; // Added
+using AutoCinema.Desktop.Views; // Added for SlideshowEditorWindow
 
 namespace AutoCinema.Desktop.ViewModels;
 
@@ -40,11 +45,6 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
 
         _jobManager.QueueStateChanged += OnQueueStateChanged;
 
-        // 启动定时刷新以获取进度更新
-        _refreshTimer = new System.Timers.Timer(1000);
-        _refreshTimer.Elapsed += (s, e) => RefreshJobs();
-        _refreshTimer.Start();
-
         RefreshJobs();
     }
 
@@ -66,11 +66,27 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
             // 在 UI 线程更新集合
             Avalonia.Threading.Dispatcher.UIThread.InvokeAsync(() =>
             {
-                // 简单全量刷新 (实际应该做 diff)
-                Jobs.Clear();
-                foreach (var job in jobs.OrderByDescending(j => j.CreatedAt))
+                // 智能刷新避免UI闪烁
+                var sortedJobs = jobs.OrderByDescending(j => j.CreatedAt).ToList();
+
+                // 移除不存在的
+                var currentIds = sortedJobs.Select(j => j.JobId).ToHashSet();
+                var toRemove = Jobs.Where(j => !currentIds.Contains(j.JobId)).ToList();
+                foreach (var removed in toRemove) { Jobs.Remove(removed); }
+
+                // 添加新增的或者重新排序
+                for (int i = 0; i < sortedJobs.Count; i++)
                 {
-                    Jobs.Add(job);
+                    var job = sortedJobs[i];
+                    int existingIndex = Jobs.IndexOf(job);
+                    if (existingIndex == -1)
+                    {
+                        Jobs.Insert(i, job);
+                    }
+                    else if (existingIndex != i)
+                    {
+                        Jobs.Move(existingIndex, i);
+                    }
                 }
 
                 IsRunning = _jobManager.IsRunning;
@@ -112,15 +128,24 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private void OpenResultCommand(string path)
+    private void OpenResult(string? path)
     {
-        if (string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path)) return;
+        if (string.IsNullOrWhiteSpace(path)) return;
 
         try
         {
+            // 对于 Windows，最好获取绝对路径，避免出现相对路径解析问题导致崩溃
+            var fullPath = System.IO.Path.GetFullPath(path);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                _logger.LogWarning("尝试打开的文件不存在: {Path}", fullPath);
+                return;
+            }
+
+            // 使用 explorer.exe /select,path 来定位并在资源管理器中选中文件
             new System.Diagnostics.Process
             {
-                StartInfo = new System.Diagnostics.ProcessStartInfo(path)
+                StartInfo = new System.Diagnostics.ProcessStartInfo("explorer.exe", $"/select,\"{fullPath}\"")
                 {
                     UseShellExecute = true
                 }
@@ -128,14 +153,55 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "无法打开文件: {Path}", path);
+            _logger.LogError(ex, "无法打开或定位文件: {Path}", path);
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenJobCreationWizardAsync()
+    {
+        try
+        {
+            var app = (App)Application.Current!;
+            var wizardVm = new AutoCinema.Desktop.ViewModels.JobCreation.JobCreationViewModel(app.Services!);
+            var wizardWindow = new AutoCinema.Desktop.Views.JobCreationWindow
+            {
+                DataContext = wizardVm
+            };
+
+            // Allow the wizard to open other windows (like SlideshowEditor)
+            // For now, let's just show the wizard
+            await wizardWindow.ShowDialog(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to open Job Creation Wizard");
+        }
+    }
+
+    [RelayCommand]
+    private async Task OpenSlideshowEditorAsync()
+    {
+        // ... keeping this for backward compatibility or direct access if needed
+        // but UI will primarily use the Wizard
+        try
+        {
+            var app = (App)Application.Current!;
+            var editorVm = app.Services!.GetRequiredService<SlideshowEditorViewModel>();
+            var editorWindow = new SlideshowEditorWindow
+            {
+                DataContext = editorVm
+            };
+            await editorWindow.ShowDialog(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to open Slideshow Editor");
         }
     }
 
     public void Dispose()
     {
         _jobManager.QueueStateChanged -= OnQueueStateChanged;
-        _refreshTimer?.Stop();
-        _refreshTimer?.Dispose();
     }
 }

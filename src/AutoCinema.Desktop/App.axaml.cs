@@ -74,12 +74,12 @@ public partial class App : Application
 
             Log.Information("依赖注入容器已配置完成");
 
-            // 确保数据库已创建
+            // 确保数据库已创建/迁移
             using (var scope = Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<CinemaDbContext>();
-                dbContext.Database.EnsureCreated();
-                Log.Information("数据库已初始化");
+                dbContext.Database.Migrate();
+                Log.Information("数据库已初始化(Migrate)");
             }
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -124,7 +124,7 @@ public partial class App : Application
         services.Configure<PipelineOptions>(configuration.GetSection(PipelineOptions.SectionName));
 
         // 注册数据库
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? "Data Source=autocinema.db";
+        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? @"Data Source=e:\100.Work\NestCoreProject\AutoCinema\src\db\autocinema.db";
         services.AddPooledDbContextFactory<CinemaDbContext>(options =>
             options.UseSqlite(connectionString));
         services.AddDbContext<CinemaDbContext>(options =>
@@ -163,6 +163,11 @@ public partial class App : Application
         services.AddSingleton<IJobManager, JobManager>();
 
         // 注册 ViewModels
+        services.AddTransient<SlideshowEditorViewModel>();
+        // ScriptToVideoFormViewModel and JobCreationViewModel will be created manually or via factory to handle events/callbacks
+        // But for pure DI resolution without callbacks, we can register them if constructors are clean.
+        // Let's keep them registered for now, but we'll likely instantiate JobCreationViewModel manually in the Window.
+
         services.AddSingleton<MainWindowViewModel>();
         services.AddSingleton<MainHomeWindowViewModel>();
         services.AddSingleton<BatchJobWindowViewModel>();

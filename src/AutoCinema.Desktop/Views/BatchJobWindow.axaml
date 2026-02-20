@@ -26,6 +26,13 @@
 
                 <!-- Queue Controls -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10">
+                    <Button Command="{Binding OpenJobCreationWizardCommand}" Background="#007ACC" Foreground="White" Padding="10,5" CornerRadius="4">
+                        <StackPanel Orientation="Horizontal" Spacing="5">
+                            <TextBlock Text="➕"/>
+                            <TextBlock Text="新建任务"/>
+                        </StackPanel>
+                    </Button>
+
                     <Button Command="{Binding StartQueueCommand}" 
                             IsEnabled="{Binding !IsRunning}"
                             Background="#2da44e" Foreground="White" 

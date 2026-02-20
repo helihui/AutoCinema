@@ -1,0 +1,3 @@
+Build started...
+Build succeeded.
+Unable to create a 'DbContext' of type ''. The exception 'The entity type 'JobItem' requires a primary key to be defined. If you intended to use a keyless entity type, call 'HasNoKey' in 'OnModelCreating'. For more information on keyless entity types, see https://go.microsoft.com/fwlink/?linkid=2141943.' was thrown while attempting to create an instance. For the different patterns supported at design time, see https://go.microsoft.com/fwlink/?linkid=851728

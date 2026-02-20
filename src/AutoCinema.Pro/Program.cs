@@ -102,7 +102,7 @@ public class Program
     private static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
     {
         // 注册数据库服务
-        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? "Data Source=autocinema.db";
+        var connectionString = configuration.GetConnectionString("DefaultConnection") ?? @"Data Source=e:\100.Work\NestCoreProject\AutoCinema\src\db\autocinema.db";
         services.AddPooledDbContextFactory<CinemaDbContext>(options =>
             options.UseSqlite(connectionString));
 

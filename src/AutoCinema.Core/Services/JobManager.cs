@@ -3,6 +3,8 @@ using AutoCinema.Pro.Models;
 using AutoCinema.Pro.Models.Jobs;
 using AutoCinema.Core.Services.Jobs;
 using AutoCinema.Pro.Pipeline;
+using AutoCinema.Pro.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace AutoCinema.Pro.Services;
@@ -15,6 +17,7 @@ public class JobManager : IJobManager, IDisposable
 
     private readonly IEnumerable<IJobHandler> _handlers;
     private readonly ILogger<JobManager> _logger;
+    private readonly IDbContextFactory<CinemaDbContext> _contextFactory;
     private readonly CancellationTokenSource _cts = new();
     private Task? _processingTask;
     private bool _isRunning;
@@ -26,10 +29,37 @@ public class JobManager : IJobManager, IDisposable
 
     public JobManager(
         IEnumerable<IJobHandler> handlers,
-        ILogger<JobManager> logger)
+        ILogger<JobManager> logger,
+        IDbContextFactory<CinemaDbContext> contextFactory)
     {
         _handlers = handlers;
         _logger = logger;
+        _contextFactory = contextFactory;
+
+        LoadJobsFromDatabase();
+    }
+
+    private void LoadJobsFromDatabase()
+    {
+        try
+        {
+            using var context = _contextFactory.CreateDbContext();
+            var jobs = context.Jobs.ToList();
+            foreach (var job in jobs)
+            {
+                _allJobs.TryAdd(job.JobId, job);
+                if (job.Status == JobStatus.Pending || job.Status == JobStatus.Processing)
+                {
+                    job.Status = JobStatus.Pending; // 恢复中断的任务为Pending
+                    _queue.Enqueue(job);
+                }
+            }
+            _logger.LogInformation("已从数据库恢复 {Count} 个任务记录", jobs.Count);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "从数据库加载任务记录失败");
+        }
     }
 
     /// <summary>
@@ -40,13 +70,24 @@ public class JobManager : IJobManager, IDisposable
         return _allJobs.Values.ToArray();
     }
 
-    public Task EnqueueAsync(JobItem job)
+    public async Task EnqueueAsync(JobItem job)
     {
         _queue.Enqueue(job);
         _allJobs.TryAdd(job.JobId, job); // 记录到全局字典
+
+        try
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            context.Jobs.Add(job);
+            await context.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "向数据库保存新任务失败: {JobId}", job.JobId);
+        }
+
         _logger.LogInformation("任务 {JobId} ({Type}) 已加入队列", job.JobId, job.Type);
         QueueStateChanged?.Invoke(this, EventArgs.Empty);
-        return Task.CompletedTask;
     }
 
     public void StartProcessing()
@@ -118,19 +159,20 @@ public class JobManager : IJobManager, IDisposable
                     }
 
                     job.Status = JobStatus.Processing;
+                    await SaveJobStateAsync(job);
                     QueueStateChanged?.Invoke(this, EventArgs.Empty);
 
                     var progress = new Progress<ProductionProgress>(p =>
                     {
                         job.Progress = p;
-                        // 这里可以选择是否频繁触发状态变更事件，或者由 UI 主动轮询
-                        // QueueStateChanged?.Invoke(this, EventArgs.Empty);
+                        QueueStateChanged?.Invoke(this, EventArgs.Empty);
                     });
 
                     await handler.ExecuteAsync(job, progress, _cts.Token);
 
                     job.Status = JobStatus.Completed;
                     job.FinishedAt = DateTime.Now;
+                    await SaveJobStateAsync(job);
                     _logger.LogInformation("任务处理完成: {JobId}", job.JobId);
                 }
                 catch (Exception ex)
@@ -138,6 +180,7 @@ public class JobManager : IJobManager, IDisposable
                     _logger.LogError(ex, "处理任务失败: {JobId}", job.JobId);
                     job.Status = JobStatus.Failed;
                     job.ErrorMessage = ex.Message;
+                    await SaveJobStateAsync(job);
                 }
                 finally
                 {
@@ -148,6 +191,25 @@ public class JobManager : IJobManager, IDisposable
             {
                 await Task.Delay(1000); // 队列为空时等待
             }
+        }
+    }
+
+    private async Task SaveJobStateAsync(JobItem job)
+    {
+        try
+        {
+            using var context = await _contextFactory.CreateDbContextAsync();
+            var existing = await context.Jobs.FindAsync(job.JobId);
+            if (existing != null)
+            {
+                context.Entry(existing).CurrentValues.SetValues(job);
+                existing.Progress = job.Progress;
+                await context.SaveChangesAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "保存任务状态到数据库失败: {JobId}", job.JobId);
         }
     }
 

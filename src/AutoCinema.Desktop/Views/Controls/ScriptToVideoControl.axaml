@@ -1,0 +1,64 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:AutoCinema.Desktop.ViewModels.JobCreation"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
+             x:Class="AutoCinema.Desktop.Views.Controls.ScriptToVideoControl"
+             x:DataType="vm:ScriptToVideoFormViewModel">
+    
+    <Grid RowDefinitions="Auto, *, Auto">
+        <!-- Input Fields -->
+        <Grid Grid.Row="1" RowDefinitions="Auto, *, Auto" Margin="0,0,0,20">
+            <TextBox Grid.Row="0" Text="{Binding ProjectTitle}" Watermark="项目标题" Margin="0,0,0,15" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="10"/>
+            
+            <TextBox Grid.Row="1" Text="{Binding StoryText}" Watermark="在这里输入您的创意故事..." AcceptsReturn="True" TextWrapping="Wrap" Background="#1a1a1a" BorderThickness="0" CornerRadius="4" Padding="15"/>
+
+            <!-- Config Buttons -->
+            <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="15" Margin="0,15,0,0">
+                <Button Width="185"
+                        Click="OpenVoiceConfig_Click"
+                        Background="#333" 
+                        CornerRadius="6" 
+                        Padding="15,10">
+                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                        <TextBlock Text="🎙️" FontSize="16"/>
+                        <TextBlock Text="声音配置" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="⌄" Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Width="185"
+                        Click="OpenStyleConfig_Click"
+                        Background="#333" 
+                        CornerRadius="6" 
+                        Padding="15,10">
+                    <StackPanel Orientation="Horizontal" Spacing="10" HorizontalAlignment="Center">
+                        <TextBlock Text="🎭" FontSize="16"/>
+                        <TextBlock Text="风格与角色" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <TextBlock Text="⌄" Foreground="#666" VerticalAlignment="Center" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Submit Button -->
+        <Button Grid.Row="2" 
+                Command="{Binding CreateJobCommand}" 
+                IsEnabled="{Binding !IsProcessing}"
+                Background="#4a3aff" 
+                Foreground="White" 
+                FontWeight="Bold" 
+                FontSize="16"
+                CornerRadius="8" 
+                Padding="0,15" 
+                HorizontalAlignment="Stretch" 
+                HorizontalContentAlignment="Center">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="🚀"/>
+                <TextBlock Text="生成视频" IsVisible="{Binding !IsProcessing}"/>
+                <TextBlock Text="处理中..." IsVisible="{Binding IsProcessing}"/>
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>
