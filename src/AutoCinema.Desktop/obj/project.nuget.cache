@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "H1Fm+QZHxCM=",
+  "dgSpecHash": "Tp/+XCW8KpY=",
   "success": true,
   "projectFilePath": "E:\\100.Work\\NestCoreProject\\AutoCinema\\src\\AutoCinema.Desktop\\AutoCinema.Desktop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\avalonia\\11.0.10\\avalonia.11.0.10.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.0.2023020321\\avalonia.angle.windows.natives.2.1.0.2023020321.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\avalonia.avaloniaedit\\11.0.6\\avalonia.avaloniaedit.11.0.6.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\avalonia.buildservices\\0.0.29\\avalonia.buildservices.0.0.29.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\avalonia.controls.colorpicker\\11.0.10\\avalonia.controls.colorpicker.11.0.10.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\avalonia.controls.datagrid\\11.0.10\\avalonia.controls.datagrid.11.0.10.nupkg.sha512",

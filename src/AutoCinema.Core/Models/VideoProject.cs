@@ -42,6 +42,9 @@ public record VideoProject
     /// <summary>道具设定列表（节点动态元素）</summary>
     public List<PropSetup> PropSetups { get; init; } = [];
 
+    /// <summary>剧本解析出的原始 JSON 数据（用于 GUI 展示和单独修改）</summary>
+    public string? ScreenplayRawData { get; set; }
+
     // ──────────────────────────────────────────────────────
 
     /// <summary>创建时间</summary>

@@ -9,6 +9,9 @@ public class MiniMaxOptions
 
     /// <summary>API 密钥</summary>
     public required string ApiKey { get; set; }
+    
+    /// <summary>企业组 ID (MiniMax V1 接口必须参数)</summary>
+    public string GroupId { get; set; } = string.Empty;
 
     /// <summary>API 端点</summary>
     public string Endpoint { get; set; } = "https://api.minimaxi.com/v1/t2a_v2";

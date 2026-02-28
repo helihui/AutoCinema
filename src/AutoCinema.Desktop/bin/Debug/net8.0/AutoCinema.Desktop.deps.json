@@ -10,6 +10,7 @@
         "dependencies": {
           "AutoCinema.Core": "1.0.0",
           "Avalonia": "11.0.10",
+          "Avalonia.AvaloniaEdit": "11.0.6",
           "Avalonia.Controls.DataGrid": "11.0.10",
           "Avalonia.Desktop": "11.0.10",
           "Avalonia.Diagnostics": "11.0.10",
@@ -94,6 +95,17 @@
             "rid": "win-x86",
             "assetType": "native",
             "fileVersion": "2.1.0.0"
+          }
+        }
+      },
+      "Avalonia.AvaloniaEdit/11.0.6": {
+        "dependencies": {
+          "Avalonia": "11.0.10"
+        },
+        "runtime": {
+          "lib/net6.0/AvaloniaEdit.dll": {
+            "assemblyVersion": "11.0.6.0",
+            "fileVersion": "11.0.6.0"
           }
         }
       },
@@ -1749,6 +1761,13 @@
       "sha512": "sha512-Zlkkb8ipxrxNWVPCJgMO19fpcpYPP+bpOQ+jPtCFj8v+TzVvPdnGHuyv9IMvSHhhMfEpps4m4hjaP4FORQYVAA==",
       "path": "avalonia.angle.windows.natives/2.1.0.2023020321",
       "hashPath": "avalonia.angle.windows.natives.2.1.0.2023020321.nupkg.sha512"
+    },
+    "Avalonia.AvaloniaEdit/11.0.6": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YVSyJDWW1fIPFp98uO29lyJYked+ErXLtha4/q/CzSEGq/0kBt2Y1xlaYQKlTESr3V85goLxn3yAKtzIwV59yA==",
+      "path": "avalonia.avaloniaedit/11.0.6",
+      "hashPath": "avalonia.avaloniaedit.11.0.6.nupkg.sha512"
     },
     "Avalonia.BuildServices/0.0.29": {
       "type": "package",

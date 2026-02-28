@@ -28,7 +28,7 @@ public class StoryboardService : IStoryboardService
         _pipelineOptions = pipelineOptions.Value;
     }
 
-    public async Task<Storyboard> ParseAsync(string outputDirectory, string rawText, string? baseVisualStyle = null, CancellationToken ct = default)
+    public async Task<(Storyboard Storyboard, string? RawJson)> ParseAsync(string outputDirectory, string rawText, string? baseVisualStyle = null, CancellationToken ct = default)
     {
         var style  = baseVisualStyle ?? _pipelineOptions.DefaultVisualStyle;
         var charPrompt = _pipelineOptions.DefaultCharacterPrompt;
@@ -65,7 +65,18 @@ public class StoryboardService : IStoryboardService
             // 保存调试文件（raw JSON 和 Storyboard 两份）
             await SaveDebugFilesAsync(outputDirectory, storyboard, screenplayJson, ct);
 
-            return storyboard;
+            // 提取出原始 JSON 并透传
+            string? rawJsonString = null;
+            if (screenplayJson != null)
+            {
+                rawJsonString = JsonSerializer.Serialize(screenplayJson, new JsonSerializerOptions
+                {
+                    Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+                });
+            }
+
+            return (storyboard, rawJsonString);
         }
         catch (JsonException ex)
         {

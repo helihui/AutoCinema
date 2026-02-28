@@ -88,12 +88,12 @@
                 <DataGridTextColumn Header="当前步骤" Binding="{Binding Progress.Step}" Width="*"/>
                 <DataGridTextColumn Header="创建时间" Binding="{Binding CreatedAt}" Width="160"/>
 
-                <!-- 「查看剧本」按钮列（CoDesign WaitingForReview 时亮起）-->
+                <!-- 「查看剧本」按钮列（CoDesign WaitingForReview 或生成完毕有剧本时亮起）-->
                 <DataGridTemplateColumn Header="剧本审阅" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="🎬 查看剧本"
-                                    IsVisible="{Binding HasPendingReview}"
+                                    IsVisible="{Binding HasScreenplay}"
                                     Command="{Binding $parent[Window].((vm:BatchJobWindowViewModel)DataContext).ReviewStoryboardCommand}"
                                     CommandParameter="{Binding}"
                                     Background="#e8a020" Foreground="White"

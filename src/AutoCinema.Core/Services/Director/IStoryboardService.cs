@@ -15,5 +15,5 @@ public interface IStoryboardService
     /// <param name="baseVisualStyle">基础视觉风格（可选）</param>
     /// <param name="ct">取消令牌</param>
     /// <returns>结构化的故事板</returns>
-    Task<Storyboard> ParseAsync(string outputDirectory, string rawText, string? baseVisualStyle = null, CancellationToken ct = default);
+    Task<(Storyboard Storyboard, string? RawJson)> ParseAsync(string outputDirectory, string rawText, string? baseVisualStyle = null, CancellationToken ct = default);
 }

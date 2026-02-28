@@ -1,136 +1,171 @@
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using AutoCinema.Pro.Models;
+using AutoCinema.Pro.Models.Jobs;
 using AutoCinema.Pro.Models.Screenplay;
-using AutoCinema.Pro.Pipeline.Models;
+using AutoCinema.Pro.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Avalonia.Controls;
 
 namespace AutoCinema.Desktop.ViewModels;
 
-/// <summary>
-/// 分镜审阅对话框 ViewModel（CoDesign 模式）
-/// 允许用户在剧本生成后查看并修改每个分镜，然后确认继续生成。
-/// </summary>
 public partial class StoryboardReviewViewModel : ViewModelBase
 {
-    private readonly StoryboardReviewGate _gate;
-    public event EventHandler? WindowCloseRequested;
+    private readonly JobItem _jobItem;
+    private readonly IJobManager? _jobManager;
 
     [ObservableProperty]
-    private string _title = "";
+    private string _windowTitle = "剧本查看与编辑";
 
     [ObservableProperty]
-    private string _synopsis = "";
+    private string _screenplayJsonText = string.Empty;
 
     [ObservableProperty]
-    private string _wrappingStyle = "";
+    private string _statusMessage = "就绪";
+    
+    [ObservableProperty]
+    private bool _isReadOnly = false;
 
     [ObservableProperty]
-    private ObservableCollection<ShotEditItem> _shots = new();
+    private bool _canContinuePipeline = false;
 
-    [ObservableProperty]
-    private string _notes = "";
-
-    [ObservableProperty]
-    private ObservableCollection<string> _characterSummaries = new();
-
-    [ObservableProperty]
-    private ObservableCollection<string> _sceneSummaries = new();
-
-    public StoryboardReviewViewModel(StoryboardReviewGate gate)
-    {
-        _gate = gate;
-        LoadScreenplay(gate.PendingScreenplay);
-    }
-
-    private void LoadScreenplay(ScreenplayDocument screenplay)
-    {
-        Title = screenplay.Title;
-        Synopsis = screenplay.Synopsis;
-        WrappingStyle = screenplay.WrappingStyle;
-        Notes = screenplay.Notes;
-
-        CharacterSummaries = new ObservableCollection<string>(
-            screenplay.Characters.Select(c => $"{c.Name}（{c.Role}）：{c.Appearance}"));
-
-        SceneSummaries = new ObservableCollection<string>(
-            screenplay.Scenes.Select(s => $"{s.Name}·{s.TimeOfDay}：{s.Atmosphere}"));
-
-        Shots = new ObservableCollection<ShotEditItem>(
-            screenplay.Shots.Select(s => new ShotEditItem
-            {
-                Index = s.Index,
-                DurationSeconds = s.DurationSeconds,
-                FrameType = s.FrameType,
-                CameraAngle = s.CameraAngle,
-                Action = s.Action,
-                Transition = s.Transition,
-                NarrationText = s.NarrationText,
-                CharacterDialogue = s.CharacterDialogue ?? "",
-                AigcPrompt = s.AigcPrompt
-            }));
-    }
+    // 当前操作的窗口引用
+    public Window? ParentWindow { get; set; }
 
     /// <summary>
-    /// 用户点击「确认生成 ▶」：将修改后的分镜回写到剧本，解锁 pipeline 继续执行。
+    /// 支持直接通过包含了 ScreenplayRawData 的任务打开（用于随时查看和修改）
     /// </summary>
+    public StoryboardReviewViewModel(JobItem jobItem, IJobManager jobManager)
+    {
+        _jobItem = jobItem;
+        _jobManager = jobManager;
+
+        if (jobItem is TextToVideoJob t && t.ProjectData != null)
+        {
+            WindowTitle = $"剧本查看 - {jobItem.Title}";
+            LoadAndFormatJson(t.ProjectData.ScreenplayRawData);
+        }
+        else
+        {
+            StatusMessage = "未找到可用的剧本数据";
+            IsReadOnly = true;
+        }
+
+        // 如果任务正在等待审阅卡点，则允许点击“继续”
+        if (_jobItem.HasPendingReview)
+        {
+            CanContinuePipeline = true;
+            WindowTitle = "剧本审阅 (等待您的确认以继续)";
+        }
+    }
+
+    private void LoadAndFormatJson(string? rawJson)
+    {
+        if (string.IsNullOrWhiteSpace(rawJson))
+        {
+            ScreenplayJsonText = "{}";
+            return;
+        }
+
+        try
+        {
+            // 尝试格式化 JSON 以便阅读
+            var parsed = JsonDocument.Parse(rawJson);
+            var opt = new JsonSerializerOptions { 
+                WriteIndented = true, 
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping 
+            };
+            ScreenplayJsonText = JsonSerializer.Serialize(parsed, opt);
+        }
+        catch
+        {
+            // 如果解析失败，直接显示原始内容
+            ScreenplayJsonText = rawJson;
+        }
+    }
+
     [RelayCommand]
-    private void ConfirmAndGenerate()
+    private async Task SaveAsync()
     {
-        var pending = _gate.PendingScreenplay;
+        if (_jobItem is not TextToVideoJob textJob || textJob.ProjectData == null)
+            return;
 
-        var editedShots = Shots.Select((item, i) => new Shot
+        try
         {
-            Index = item.Index,
-            DurationSeconds = item.DurationSeconds,
-            FrameType = item.FrameType,
-            CameraAngle = item.CameraAngle,
-            Action = item.Action,
-            Transition = item.Transition,
-            NarrationText = item.NarrationText,
-            CharacterDialogue = string.IsNullOrWhiteSpace(item.CharacterDialogue) ? null : item.CharacterDialogue,
-            AigcPrompt = item.AigcPrompt,
-            SceneName = pending.Shots.Count > i ? pending.Shots[i].SceneName : null
-        }).ToList();
+            // 校验一下是不是合法 JSON
+            JsonDocument.Parse(ScreenplayJsonText);
 
-        var approvedScreenplay = pending with
+            // 更新对象中的数据
+            textJob.ProjectData.ScreenplayRawData = ScreenplayJsonText;
+
+            // 调用队列管理器落库
+            if (_jobManager != null)
+            {
+                await _jobManager.UpdateJobAsync(_jobItem);
+            }
+
+            StatusMessage = "✅ 剧本保存成功";
+        }
+        catch (JsonException)
         {
-            Title = Title,
-            Synopsis = Synopsis,
-            Notes = Notes,
-            Shots = editedShots
-        };
-
-        _gate.Approve(approvedScreenplay);
-        WindowCloseRequested?.Invoke(this, EventArgs.Empty);
+            StatusMessage = "❌ JSON 格式错误，请检查后再存";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"❌ 保存出错：{ex.Message}";
+        }
     }
 
-    /// <summary>
-    /// 用户点击「取消」：取消 pipeline 执行。
-    /// </summary>
+    [RelayCommand]
+    private async Task SaveAndContinueAsync()
+    {
+        // 先走一遍验证和保存逻辑
+        await SaveAsync();
+        
+        if (!StatusMessage.Contains("✅")) return; // 如果保存没成功，就不继续
+        
+        // 只有流水线在等的时候才能“继续”
+        if (_jobItem.ReviewGate != null && !_jobItem.ReviewGate.IsCompleted)
+        {
+            try 
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var doc = JsonSerializer.Deserialize<ScreenplayDocument>(ScreenplayJsonText, options);
+                
+                if (doc != null) 
+                {
+                    _jobItem.ReviewGate.Approve(doc);
+                }
+                else
+                {
+                    StatusMessage = "❌ 转换到验证强类型失败，结构不匹配。";
+                    return;
+                }
+            } 
+            catch (Exception ex)
+            {
+                StatusMessage = $"❌ 无法将当前剧本用于放行审核: {ex.Message}";
+                return;
+            }
+        }
+
+        StatusMessage = "✅ 剧本已确认，流水线继续运行...";
+        
+        // 延时关闭窗口
+        await Task.Delay(500);
+        ParentWindow?.Close();
+    }
+
     [RelayCommand]
     private void Cancel()
     {
-        _gate.Cancel();
-        WindowCloseRequested?.Invoke(this, EventArgs.Empty);
+        if (_jobItem.ReviewGate != null && _jobItem.Status == JobStatus.WaitingForReview && !_jobItem.ReviewGate.IsCompleted)
+        {
+            // 取消则拒绝管线放行
+            _jobItem.ReviewGate.Cancel();
+        }
+        ParentWindow?.Close();
     }
-}
-
-/// <summary>
-/// 单个分镜的可编辑视图模型项
-/// </summary>
-public partial class ShotEditItem : ObservableObject
-{
-    [ObservableProperty] private int _index;
-    [ObservableProperty] private int _durationSeconds;
-    [ObservableProperty] private string _frameType = "";
-    [ObservableProperty] private string _cameraAngle = "";
-    [ObservableProperty] private string _action = "";
-    [ObservableProperty] private string _transition = "";
-    [ObservableProperty] private string _narrationText = "";
-    [ObservableProperty] private string _characterDialogue = "";
-    [ObservableProperty] private string _aigcPrompt = "";
-
-    public string DisplayTitle => $"分镜 {Index}  [{FrameType}·{CameraAngle}]  {DurationSeconds}s";
 }

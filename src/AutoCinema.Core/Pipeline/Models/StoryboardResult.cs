@@ -16,4 +16,9 @@ public class StoryboardResult
     /// 场景数量
     /// </summary>
     public int SceneCount { get; set; }
+
+    /// <summary>
+    /// 原始剧本 JSON 数据（透传给 Pipeline 存入 Project）
+    /// </summary>
+    public string? ScreenplayRawData { get; set; }
 }

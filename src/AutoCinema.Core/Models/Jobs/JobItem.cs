@@ -106,4 +106,16 @@ public abstract class JobItem : INotifyPropertyChanged
     /// <summary>是否有待确认的剧本审阅</summary>
     [JsonIgnore]
     public bool HasPendingReview => Status == JobStatus.WaitingForReview && ReviewGate != null;
+
+    /// <summary>是否包含剧本 JSON 数据（随时可供查看）</summary>
+    [JsonIgnore]
+    public bool HasScreenplay
+    {
+        get
+        {
+            if (this is TextToVideoJob t && t.ProjectData?.ScreenplayRawData != null)
+                return true;
+            return HasPendingReview;
+        }
+    }
 }

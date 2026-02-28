@@ -157,6 +157,10 @@
               "target": "Package",
               "version": "[11.0.10, )"
             },
+            "Avalonia.AvaloniaEdit": {
+              "target": "Package",
+              "version": "[11.0.6, )"
+            },
             "Avalonia.Controls.DataGrid": {
               "target": "Package",
               "version": "[11.0.10, )"

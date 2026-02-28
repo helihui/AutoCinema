@@ -96,6 +96,18 @@
           }
         }
       },
+      "Avalonia.AvaloniaEdit/11.0.6": {
+        "type": "package",
+        "dependencies": {
+          "Avalonia": "11.0.0"
+        },
+        "compile": {
+          "lib/net6.0/AvaloniaEdit.dll": {}
+        },
+        "runtime": {
+          "lib/net6.0/AvaloniaEdit.dll": {}
+        }
+      },
       "Avalonia.BuildServices/0.0.29": {
         "type": "package",
         "build": {
@@ -2856,6 +2868,20 @@
         "runtimes/win-arm64/native/av_libglesv2.dll",
         "runtimes/win-x64/native/av_libglesv2.dll",
         "runtimes/win-x86/native/av_libglesv2.dll"
+      ]
+    },
+    "Avalonia.AvaloniaEdit/11.0.6": {
+      "sha512": "YVSyJDWW1fIPFp98uO29lyJYked+ErXLtha4/q/CzSEGq/0kBt2Y1xlaYQKlTESr3V85goLxn3yAKtzIwV59yA==",
+      "type": "package",
+      "path": "avalonia.avaloniaedit/11.0.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "avalonia.avaloniaedit.11.0.6.nupkg.sha512",
+        "avalonia.avaloniaedit.nuspec",
+        "lib/net6.0/AvaloniaEdit.dll",
+        "lib/netstandard2.0/AvaloniaEdit.dll"
       ]
     },
     "Avalonia.BuildServices/0.0.29": {
@@ -7548,6 +7574,7 @@
     "net8.0": [
       "AutoCinema.Core >= 1.0.0",
       "Avalonia >= 11.0.10",
+      "Avalonia.AvaloniaEdit >= 11.0.6",
       "Avalonia.Controls.DataGrid >= 11.0.10",
       "Avalonia.Desktop >= 11.0.10",
       "Avalonia.Diagnostics >= 11.0.10",
@@ -7619,6 +7646,10 @@
           "Avalonia": {
             "target": "Package",
             "version": "[11.0.10, )"
+          },
+          "Avalonia.AvaloniaEdit": {
+            "target": "Package",
+            "version": "[11.0.6, )"
           },
           "Avalonia.Controls.DataGrid": {
             "target": "Package",

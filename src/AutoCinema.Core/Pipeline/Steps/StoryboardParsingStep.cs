@@ -40,11 +40,18 @@ public class StoryboardParsingStep : BasePipelineStep<VideoProject, StoryboardRe
             "开始故事板解析阶段: Stage={Stage}, TotalStages={TotalStages}",
             1, 4);
 
-        var storyboard = await _storyboardService.ParseAsync(
+        var (storyboard, rawJson) = await _storyboardService.ParseAsync(
             input.OutputDirectory,
             input.RawStoryText,
             input.BaseVisualStyle,
             ct);
+
+        // 持久化原始 JSON (C方案)：
+        // Pipeline 运作中 input 对象作为引用型上下文被共享，我们直接修改项目对象
+        if (!string.IsNullOrEmpty(rawJson))
+        {
+            input.ScreenplayRawData = rawJson;
+        }
 
         context.Logger.LogInformation(
             "故事板解析完成: SceneCount={SceneCount}",
@@ -55,7 +62,8 @@ public class StoryboardParsingStep : BasePipelineStep<VideoProject, StoryboardRe
         return new StoryboardResult
         {
             Storyboard = storyboard,
-            SceneCount = storyboard.Scenes.Count
+            SceneCount = storyboard.Scenes.Count,
+            ScreenplayRawData = rawJson
         };
     }
 }

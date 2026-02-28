@@ -165,10 +165,23 @@ public class JobManager : IJobManager, IDisposable
                     await SaveJobStateAsync(job);
                     QueueStateChanged?.Invoke(this, EventArgs.Empty);
 
-                    var progress = new Progress<ProductionProgress>(p =>
+                    var progress = new Progress<ProductionProgress>(async p =>
                     {
+                        var needSave = job.Status != JobStatus.WaitingForReview && job.ReviewGate != null && !job.HasPendingReview;
                         job.Progress = p;
+                        
+                        // Handler 会把 job 设回 WaitingForReview，这通常是通过 progress 传达的，所以在这里也可以一并保存一次
+                        if (job.Status == JobStatus.WaitingForReview)
+                        {
+                            needSave = true;
+                        }
+
                         QueueStateChanged?.Invoke(this, EventArgs.Empty);
+
+                        if (needSave)
+                        {
+                            await SaveJobStateAsync(job);
+                        }
                     });
 
                     await handler.ExecuteAsync(job, progress, _cts.Token);
@@ -218,6 +231,13 @@ public class JobManager : IJobManager, IDisposable
         {
             _logger.LogError(ex, "保存任务状态到数据库失败: {JobId}", job.JobId);
         }
+    }
+
+    public Task UpdateJobAsync(JobItem job)
+    {
+        // 外部手动调用强制更新
+        _allJobs[job.JobId] = job;
+        return SaveJobStateAsync(job);
     }
 
     public void Dispose()

@@ -39,6 +39,11 @@ public interface IJobManager
     int PendingJobCount { get; }
 
     /// <summary>
+    /// 更新特定的任务并持久化
+    /// </summary>
+    Task UpdateJobAsync(JobItem job);
+
+    /// <summary>
     /// 获取所有任务的快照
     /// </summary>
     IEnumerable<JobItem> GetSnapshot();

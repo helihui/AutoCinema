@@ -183,14 +183,17 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ReviewStoryboard(JobItem job)
     {
-        if (job?.ReviewGate == null) return;
+        if (job == null || (!job.HasScreenplay)) return;
 
         try
         {
-            var vm = new StoryboardReviewViewModel(job.ReviewGate);
-            var window = new StoryboardReviewWindow(vm);
+            var vm = new StoryboardReviewViewModel(job, _jobManager);
+            var window = new StoryboardReviewWindow
+            {
+                DataContext = vm
+            };
 
-            // 审阅窗口关闭时刷新任务列表（状态可能已从 WaitingForReview 变为 Processing/Cancelled）
+            // 审阅窗口关闭时刷新任务列表（状态可能已从 WaitingForReview 变为 Processing/Cancelled，或内容已更新）
             window.Closed += (_, _) => RefreshJobs();
             window.Show();
         }

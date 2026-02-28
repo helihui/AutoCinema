@@ -49,6 +49,7 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
 
             var requestBody = new GetVoiceRequest
             {
+                GroupId = _options.GroupId,
                 VoiceType = "all" // 获取所有类型: system, voice_cloning, voice_generation
             };
 
@@ -63,14 +64,20 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
 
             var response = await _httpClient.SendAsync(request, ct);
+            var responseJson = await response.Content.ReadAsStringAsync(ct);
+            _logger.LogInformation("MiniMax 获取声音列表原始响应: {Response}", responseJson);
+            
             response.EnsureSuccessStatusCode();
 
             GetVoiceResponse? result;
             try
             {
-                result = await response.Content.ReadFromJsonAsync<GetVoiceResponse>(
-                    new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower },
-                    ct);
+                result = JsonSerializer.Deserialize<GetVoiceResponse>(
+                    responseJson,
+                    new JsonSerializerOptions { 
+                        PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                        PropertyNameCaseInsensitive = true
+                    });
             }
             catch (Exception jsonEx)
             {
@@ -93,9 +100,10 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
             // 转换系统预设声音
             if (result?.Voices != null)
             {
+                _logger.LogInformation("解析到 {Count} 个系统预设声音", result.Voices.Count);
                 foreach (var voice in result.Voices)
                 {
-                    voices.Add(new VoiceProfile
+                    var profile = new VoiceProfile
                     {
                         VoiceId = voice.VoiceId,
                         DisplayName = voice.Name ?? voice.VoiceId,
@@ -107,16 +115,24 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
                         Tags = voice.Tags ?? new List<string>(),
                         IsCloned = false,
                         PreviewUrl = voice.PreviewUrl
-                    });
+                    };
+
+                    if (!string.IsNullOrEmpty(voice.CreatedTime) && DateTime.TryParse(voice.CreatedTime, out var dt))
+                    {
+                        profile.CreatedAt = dt;
+                    }
+
+                    voices.Add(profile);
                 }
             }
 
             // 转换克隆声音
             if (result?.VoiceCloning != null)
             {
+                _logger.LogInformation("解析到 {Count} 个用户克隆声音", result.VoiceCloning.Count);
                 foreach (var voice in result.VoiceCloning)
                 {
-                    voices.Add(new VoiceProfile
+                    var profile = new VoiceProfile
                     {
                         VoiceId = voice.VoiceId,
                         DisplayName = voice.Name ?? $"克隆声音_{voice.VoiceId}",
@@ -124,14 +140,18 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
                         Language = "zh-CN",
                         Gender = VoiceGender.Neutral,
                         IsCloned = true,
-                        CreatedAt = voice.CreatedAt.HasValue
-                            ? DateTimeOffset.FromUnixTimeSeconds(voice.CreatedAt.Value).DateTime
-                            : DateTime.UtcNow
-                    });
+                    };
+
+                    if (!string.IsNullOrEmpty(voice.CreatedAt) && DateTime.TryParse(voice.CreatedAt, out var dt))
+                    {
+                        profile.CreatedAt = dt;
+                    }
+
+                    voices.Add(profile);
                 }
             }
 
-            _logger.LogInformation("成功获取 {Count} 个声音", voices.Count);
+            _logger.LogInformation("最终成功加载了 {Count} 个音色配置文件", voices.Count);
             return voices;
         }
         catch (Exception ex)
@@ -325,6 +345,10 @@ public class MiniMaxVoiceConfigurationService : IVoiceConfigurationService
 
 internal class GetVoiceRequest
 {
+    [JsonPropertyName("group_id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? GroupId { get; set; }
+
     [JsonPropertyName("voice_type")]
     public required string VoiceType { get; set; } // "system", "voice_cloning", "all"
 }
@@ -365,6 +389,9 @@ internal class SystemVoice
 
     [JsonPropertyName("preview_url")]
     public string? PreviewUrl { get; set; }
+
+    [JsonPropertyName("created_time")]
+    public string? CreatedTime { get; set; }
 }
 
 internal class ClonedVoice
@@ -376,7 +403,7 @@ internal class ClonedVoice
     public string? Name { get; set; }
 
     [JsonPropertyName("created_time")]
-    public long? CreatedAt { get; set; } // API 实际返回的是 created_time
+    public string? CreatedAt { get; set; } // API 返回日期字符串，如 "2026-02-23"
 }
 
 internal class VoiceCloneResponse

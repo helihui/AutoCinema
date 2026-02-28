@@ -22,8 +22,5 @@ public partial class JobCreationWindow : Window
         }
     }
 
-    private void CloseButton_Click(object? sender, RoutedEventArgs e)
-    {
-        Close();
-    }
+
 }
