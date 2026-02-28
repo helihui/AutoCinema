@@ -69,32 +69,37 @@ public class AssetAggregationStep : BasePipelineStep<StoryboardResult, AssetGene
             var promptContent = $"[Visual Prompt]\n{scene.VisualPrompt}\n\n[Speech Text]\n{scene.SpeechText}";
             await File.WriteAllTextAsync(promptPath, promptContent, ct);
 
-            // 并行生成图片和音频
+            // 并行生成图片，仅当有配音文本时才调用 TTS
             var imageTask = _imageService.GenerateAsync(scene.VisualPrompt, imagePath, ct);
-            var audioTask = _speechService.GenerateAsync(scene.SpeechText, audioPath, context.Project.VoiceConfig, ct);
+            var hasSpeech = !string.IsNullOrWhiteSpace(scene.SpeechText);
+            Task audioTask = hasSpeech
+                ? _speechService.GenerateAsync(scene.SpeechText, audioPath, context.Project.VoiceConfig, ct)
+                : Task.CompletedTask;
 
             await Task.WhenAll(imageTask, audioTask);
 
-            // 获取音频精确时长(作为时间轴基准)
-            var duration = await _audioService.GetDurationAsync(audioPath, ct);
+            // 获取音频精确时长；纯画面镜头默认 3 秒
+            var duration = hasSpeech
+                ? await _audioService.GetDurationAsync(audioPath, ct)
+                : TimeSpan.FromSeconds(3);
 
             // 更新进度
-            var completed = Interlocked.Increment(ref completedCount);
+            var completed  = Interlocked.Increment(ref completedCount);
             var percentage = 10 + (int)(70.0 * completed / totalScenes);
 
             ReportProgress(context, "演员阶段", $"生成场景 {completed}/{totalScenes}", percentage);
 
             context.Logger.LogInformation(
-                "场景生成完成: SceneIndex={SceneIndex}, TotalScenes={TotalScenes}, Duration={Duration}",
-                scene.Index, totalScenes, duration);
+                "场景生成完成: SceneIndex={SceneIndex}, TotalScenes={TotalScenes}, Duration={Duration}, HasSpeech={HasSpeech}",
+                scene.Index, totalScenes, duration, hasSpeech);
 
             return new GeneratedAsset
             {
-                SceneIndex = scene.Index,
-                ImagePath = imagePath,
-                AudioPath = audioPath,
+                SceneIndex    = scene.Index,
+                ImagePath     = imagePath,
+                AudioPath     = hasSpeech ? audioPath : string.Empty,
                 AudioDuration = duration,
-                SpeechText = scene.SpeechText
+                SpeechText    = scene.SpeechText
             };
         });
 

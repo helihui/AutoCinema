@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoCinema.Desktop")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5f9434b0693c3062b0062b3e2020fcab2b891577")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+507048f288ec9512dbe29755a19b5ead3e1c8f64")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoCinema.Desktop")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoCinema.Desktop")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

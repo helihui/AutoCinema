@@ -41,6 +41,7 @@ public class StoryboardParsingStep : BasePipelineStep<VideoProject, StoryboardRe
             1, 4);
 
         var storyboard = await _storyboardService.ParseAsync(
+            input.OutputDirectory,
             input.RawStoryText,
             input.BaseVisualStyle,
             ct);

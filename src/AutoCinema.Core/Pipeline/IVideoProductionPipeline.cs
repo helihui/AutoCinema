@@ -1,4 +1,5 @@
 using AutoCinema.Pro.Models;
+using AutoCinema.Pro.Pipeline.Models;
 
 namespace AutoCinema.Pro.Pipeline;
 
@@ -44,4 +45,10 @@ public record ProductionProgress
 
     /// <summary>总场景数</summary>
     public int? TotalScenes { get; init; }
+
+    /// <summary>
+    /// CoDesign 审阅关卡（仅在 WaitingForReview 状态时不为 null）。
+    /// Handler 层检测到该字段非 null 则把 job.ReviewGate 设为该关卡并更改任务状态。
+    /// </summary>
+    public StoryboardReviewGate? ReviewGate { get; init; }
 }

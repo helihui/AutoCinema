@@ -17,6 +17,23 @@ namespace AutoCinema.Pro.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
 
+            modelBuilder.Entity("AutoCinema.Pro.Models.ClonedVoiceRecord", b =>
+                {
+                    b.Property<string>("VoiceId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("VoiceId");
+
+                    b.ToTable("ClonedVoices");
+                });
+
             modelBuilder.Entity("AutoCinema.Pro.Models.Jobs.JobItem", b =>
                 {
                     b.Property<string>("JobId")
@@ -58,6 +75,27 @@ namespace AutoCinema.Pro.Migrations
                     b.HasDiscriminator<int>("Type");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("AutoCinema.Pro.Models.PipelineCacheRecord", b =>
+                {
+                    b.Property<string>("CacheKey")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("JsonData")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StepName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("CacheKey");
+
+                    b.ToTable("PipelineCaches");
                 });
 
             modelBuilder.Entity("AutoCinema.Pro.Models.ProjectState", b =>

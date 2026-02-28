@@ -1,5 +1,7 @@
 using AutoCinema.Pro.Configuration;
+using AutoCinema.Pro.Data;
 using AutoCinema.Pro.Models;
+using Microsoft.EntityFrameworkCore;
 using AutoCinema.Pro.Pipeline.Cache;
 using AutoCinema.Pro.Pipeline.Configuration;
 using AutoCinema.Pro.Pipeline.Metrics;
@@ -18,6 +20,7 @@ namespace AutoCinema.Pro.Pipeline;
 public class VideoProductionPipeline : IVideoProductionPipeline
 {
     private readonly ILogger<VideoProductionPipeline> _logger;
+    private readonly IDbContextFactory<CinemaDbContext> _dbContextFactory;
     private readonly PipelineConfigurationLoader _configLoader;
     private readonly StoryboardParsingStep _storyboardParsingStep;
     private readonly AssetAggregationStep _assetAggregationStep;
@@ -26,6 +29,7 @@ public class VideoProductionPipeline : IVideoProductionPipeline
 
     public VideoProductionPipeline(
         ILogger<VideoProductionPipeline> logger,
+        IDbContextFactory<CinemaDbContext> dbContextFactory,
         PipelineConfigurationLoader configLoader,
         StoryboardParsingStep storyboardParsingStep,
         AssetAggregationStep assetAggregationStep,
@@ -33,6 +37,7 @@ public class VideoProductionPipeline : IVideoProductionPipeline
         VideoCompositionStep videoCompositionStep)
     {
         _logger = logger;
+        _dbContextFactory = dbContextFactory;
         _configLoader = configLoader;
         _storyboardParsingStep = storyboardParsingStep;
         _assetAggregationStep = assetAggregationStep;
@@ -81,12 +86,11 @@ public class VideoProductionPipeline : IVideoProductionPipeline
 
             _logger.LogInformation("Pipeline 配置: {ConfigName} (v{Version})", config.Name, config.Version);
 
-            // 启用步骤缓存 (断点续传)
-            var cacheDir = Path.Combine(project.OutputDirectory, ".cache");
-            context.SetCache(new FileStepCache<VideoProject, StoryboardResult>(cacheDir, _logger));
-            context.SetCache(new FileStepCache<StoryboardResult, AssetGenerationResult>(cacheDir, _logger));
-            context.SetCache(new FileStepCache<AssetGenerationResult, SubtitleGenerationResult>(cacheDir, _logger));
-            context.SetCache(new FileStepCache<SubtitleGenerationResult, VideoCompositionResult>(cacheDir, _logger));
+            // 启用步骤缓存 (数据库)
+            context.SetCache(new DbStepCache<VideoProject, StoryboardResult>(_dbContextFactory, _logger));
+            context.SetCache(new DbStepCache<StoryboardResult, AssetGenerationResult>(_dbContextFactory, _logger));
+            context.SetCache(new DbStepCache<AssetGenerationResult, SubtitleGenerationResult>(_dbContextFactory, _logger));
+            context.SetCache(new DbStepCache<SubtitleGenerationResult, VideoCompositionResult>(_dbContextFactory, _logger));
 
             // 使用类型安全的 Pipeline Builder 执行所有步骤
             // 注意: 由于类型链式特性,步骤顺序是固定的,配置主要用于记录和未来扩展

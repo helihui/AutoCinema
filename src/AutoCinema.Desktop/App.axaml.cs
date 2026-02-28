@@ -13,6 +13,8 @@ using AutoCinema.Pro.Services;
 using AutoCinema.Pro.Services.Actor;
 using AutoCinema.Pro.Services.Director;
 using AutoCinema.Pro.Services.Editor;
+using AutoCinema.Pro.Services.Audio;
+using AutoCinema.Pro.Services.Screenplay;
 using AutoCinema.Core.Services.Jobs;
 using AutoCinema.Desktop.Services;
 using AutoCinema.Desktop.ViewModels;
@@ -136,6 +138,7 @@ public partial class App : Application
         services.AddHttpClient<ISpeechGenerationService, MiniMaxSpeechService>();
         services.AddHttpClient<IVoiceConfigurationService, MiniMaxVoiceConfigurationService>();
         services.AddSingleton<IAudioPlayerService, NAudioPlayerService>();
+        services.AddSingleton<IAudioPreprocessorService, FFMpegAudioPreprocessorService>();
 
         services.AddSingleton<IStoryboardService, StoryboardService>();
         services.AddSingleton<IAudioAnalysisService, NAudioAnalysisService>();
@@ -147,6 +150,11 @@ public partial class App : Application
         services.AddSingleton<AssetAggregationStep>();
         services.AddSingleton<SubtitleGenerationStep>();
         services.AddSingleton<VideoCompositionStep>();
+        // 剧本生成服务（全量剧本模式）
+        services.AddSingleton<ScreenplayGeneratorService>();
+        services.AddSingleton<SubtitleExporterService>();
+        services.AddSingleton<TimelineExporterService>();
+        services.AddSingleton<ScreenplayGenerationStep>();
 
         // 注册 Pipeline 配置
         services.AddSingleton<PipelineConfigurationLoader>();

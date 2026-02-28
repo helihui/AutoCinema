@@ -1,0 +1,30 @@
+{
+  "name": "默认视频生产流程",
+  "version": "1.0",
+  "steps": [
+    {
+      "name": "StoryboardParsing",
+      "displayName": "故事板解析",
+      "enabled": true,
+      "useCache": true
+    },
+    {
+      "name": "AssetAggregation",
+      "displayName": "素材聚合",
+      "enabled": true,
+      "useCache": true
+    },
+    {
+      "name": "SubtitleGeneration",
+      "displayName": "字幕生成",
+      "enabled": true,
+      "useCache": true
+    },
+    {
+      "name": "VideoComposition",
+      "displayName": "视频合成",
+      "enabled": true,
+      "useCache": false
+    }
+  ]
+}

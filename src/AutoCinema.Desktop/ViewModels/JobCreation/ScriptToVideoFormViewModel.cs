@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 using AutoCinema.Pro.Models;
 using AutoCinema.Pro.Models.Jobs;
 using AutoCinema.Pro.Services;
@@ -10,6 +11,11 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.Logging;
 using AutoCinema.Desktop.Services;
+using AutoCinema.Desktop.Views;
+using AutoCinema.Pro.Data;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoCinema.Desktop.ViewModels.JobCreation;
 
@@ -20,13 +26,14 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
     private readonly IAudioPlayerService _audioPlayerService;
     private readonly IJobManager _jobManager;
     private readonly ILogger<ScriptToVideoFormViewModel> _logger;
+    private readonly IDbContextFactory<CinemaDbContext> _dbContext;
     public event EventHandler? JobCreated;
 
     [ObservableProperty]
     private string _storyText = string.Empty;
 
     [ObservableProperty]
-    private string _projectTitle = "新视频项目";
+    private string _projectTitle = "";
 
     [ObservableProperty]
     private bool _isProcessing;
@@ -73,12 +80,14 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
         IVoiceConfigurationService voiceConfigService,
         IAudioPlayerService audioPlayerService,
         IJobManager jobManager,
+        IDbContextFactory<CinemaDbContext> dbContext,
         ILogger<ScriptToVideoFormViewModel> logger)
     {
         _projectService = projectService;
         _voiceConfigService = voiceConfigService;
         _audioPlayerService = audioPlayerService;
         _jobManager = jobManager;
+        _dbContext = dbContext;
         _logger = logger;
 
         _supportsVoiceCloning = _voiceConfigService?.SupportsVoiceCloning ?? false;
@@ -100,12 +109,13 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
         try
         {
             var projectId = $"gui-{DateTime.Now:yyyyMMdd-HHmmss}";
+            var safeTitle = string.IsNullOrWhiteSpace(ProjectTitle) ? "未命名任务" : string.Join("_", ProjectTitle.Split(Path.GetInvalidFileNameChars()));
             var project = new VideoProject
             {
                 ProjectId = projectId,
                 Title = ProjectTitle,
                 RawStoryText = StoryText,
-                OutputDirectory = "./output/gui",
+                OutputDirectory = Path.Combine(AppContext.BaseDirectory, "output", "gui", safeTitle),
                 BaseVisualStyle = VisualStyle,
                 CharacterPrompt = CharacterPrompt,
                 VoiceConfig = SelectedVoice != null ? new VoiceGenerationConfig
@@ -146,10 +156,90 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
     [RelayCommand]
     private async Task CloneVoiceAsync()
     {
-        // TODO: 实现文件选择对话框
-        StatusMessage = "🎙️ 声音克隆功能开发中...";
-        _logger.LogInformation("声音克隆功能待实现");
-        await Task.CompletedTask;
+        try
+        {
+            var topLevel = Avalonia.Application.Current?.ApplicationLifetime is Avalonia.Controls.ApplicationLifetimes.IClassicDesktopStyleApplicationLifetime desktop
+                ? Avalonia.Controls.TopLevel.GetTopLevel(desktop.MainWindow)
+                : null;
+
+            if (topLevel == null)
+            {
+                StatusMessage = "❌ 无法获取文件选择器上下文";
+                return;
+            }
+
+            var files = await topLevel.StorageProvider.OpenFilePickerAsync(new Avalonia.Platform.Storage.FilePickerOpenOptions
+            {
+                Title = "选择声音样本文件",
+                AllowMultiple = false,
+                FileTypeFilter = new[]
+                {
+                    new Avalonia.Platform.Storage.FilePickerFileType("Audio Files")
+                    {
+                        Patterns = new[] { "*.mp3", "*.wav", "*.m4a" }
+                    }
+                }
+            });
+
+            if (files.Count == 0) return;
+
+            var filePath = files[0].Path.LocalPath;
+            var fileName = System.IO.Path.GetFileNameWithoutExtension(filePath);
+            var cloneName = $"{fileName}_克隆";
+
+            StatusMessage = "🎙️ 正在上传并克隆声音...";
+            IsProcessing = true;
+
+            var newVoice = await _voiceConfigService.CloneVoiceAsync(cloneName, filePath);
+
+            // Persist the cloned voice to the database
+            try
+            {
+                using var dbContext = await _dbContext.CreateDbContextAsync();
+                var record = new AutoCinema.Pro.Models.ClonedVoiceRecord
+                {
+                    VoiceId = newVoice.VoiceId,
+                    DisplayName = newVoice.DisplayName,
+                    CreatedAt = DateTime.UtcNow
+                };
+                dbContext.ClonedVoices.Add(record);
+                await dbContext.SaveChangesAsync();
+                _logger.LogInformation("克隆声音已保存到数据库: {VoiceId}", newVoice.VoiceId);
+            }
+            catch (Exception dbEx)
+            {
+                _logger.LogError(dbEx, "保存克隆声音到数据库失败");
+                // We don't fail the whole cloning process if DB save fails, just log it
+            }
+
+            // Add to the list and select it
+            AvailableVoices.Add(newVoice);
+            SelectedVoice = newVoice;
+
+            StatusMessage = $"✅ 成功克隆声音: {cloneName}";
+            _logger.LogInformation("成功克隆声音并添加到列表: {VoiceId}", newVoice.VoiceId);
+
+            var mainWindow = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            await MessageWindow.ShowAsync(
+                "克隆成功",
+                $"已成功克隆声音为：{cloneName}\n现在可以在下拉列表中选择它了！",
+                mainWindow);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "声音克隆过程中发生错误");
+            StatusMessage = $"❌ 克隆失败: {ex.Message}";
+
+            var mainWindow = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+            await MessageWindow.ShowAsync(
+                "克隆失败",
+                $"克隆声音时遇到错误：\n{ex.Message}",
+                mainWindow);
+        }
+        finally
+        {
+            IsProcessing = false;
+        }
     }
 
     private async Task LoadVoicesAsync()
@@ -158,10 +248,41 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
         {
             var voices = await _voiceConfigService.GetAvailableVoicesAsync();
             AvailableVoices.Clear();
+            
+            // 1. Load cloned voices from the local database
+            try
+            {
+                using var dbContext = await _dbContext.CreateDbContextAsync();
+                var savedClonedVoices = await dbContext.ClonedVoices.ToListAsync();
+                foreach (var clonedRecord in savedClonedVoices)
+                {
+                    AvailableVoices.Add(new VoiceProfile 
+                    {
+                        VoiceId = clonedRecord.VoiceId,
+                        DisplayName = clonedRecord.DisplayName,
+                        Description = "用户克隆的声音",
+                        Language = "zh-CN",
+                        Gender = VoiceGender.Neutral,
+                        IsCloned = true,
+                        CreatedAt = clonedRecord.CreatedAt
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "从数据库加载克隆声音记录失败");
+            }
+
+            // 2. Append official system voices
             foreach (var voice in voices)
             {
-                AvailableVoices.Add(voice);
+                // Check if it's already in the list to avoid duplicates
+                if (!AvailableVoices.Any(v => v.VoiceId == voice.VoiceId))
+                {
+                    AvailableVoices.Add(voice);
+                }
             }
+
             SelectedVoice = AvailableVoices.FirstOrDefault();
         }
         catch (Exception ex)

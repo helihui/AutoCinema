@@ -10,7 +10,11 @@ public enum ProjectStatus
 {
     Pending,
     Processing,
+    /// <summary>CoDesign 模式：剧本已生成，等待用户审阅确认</summary>
+    WaitingForReview,
     Completed,
+    /// <summary>部分成功：剧本生成成功但字幕/时间轴等后续步骤失败，可导出降级版</summary>
+    Partial,
     Failed
 }
 

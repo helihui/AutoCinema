@@ -206,3 +206,4 @@ E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\obj\Debug\net8.0\A
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\obj\Debug\net8.0\AutoCine.8A7B78E4.Up2Date
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\obj\Debug\net8.0\AutoCinema.Desktop.genruntimeconfig.cache
 E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\obj\Debug\net8.0\ref\AutoCinema.Desktop.dll
+E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\bin\Debug\net8.0\pipeline.json

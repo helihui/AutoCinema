@@ -158,7 +158,7 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private async Task OpenJobCreationWizardAsync()
+    private void OpenJobCreationWizard()
     {
         try
         {
@@ -170,8 +170,9 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
             };
 
             // Allow the wizard to open other windows (like SlideshowEditor)
-            // For now, let's just show the wizard
-            await wizardWindow.ShowDialog(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null);
+            // Changed from ShowDialog to Show because users want to open multiple times or simultaneously with generation
+            // Opened just via Show() without an explicit owner so it doesn't spawn behind the active BatchJobWindow
+            wizardWindow.Show();
         }
         catch (Exception ex)
         {
@@ -180,23 +181,22 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
     }
 
     [RelayCommand]
-    private async Task OpenSlideshowEditorAsync()
+    private void ReviewStoryboard(JobItem job)
     {
-        // ... keeping this for backward compatibility or direct access if needed
-        // but UI will primarily use the Wizard
+        if (job?.ReviewGate == null) return;
+
         try
         {
-            var app = (App)Application.Current!;
-            var editorVm = app.Services!.GetRequiredService<SlideshowEditorViewModel>();
-            var editorWindow = new SlideshowEditorWindow
-            {
-                DataContext = editorVm
-            };
-            await editorWindow.ShowDialog(Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop ? desktop.MainWindow : null);
+            var vm = new StoryboardReviewViewModel(job.ReviewGate);
+            var window = new StoryboardReviewWindow(vm);
+
+            // 审阅窗口关闭时刷新任务列表（状态可能已从 WaitingForReview 变为 Processing/Cancelled）
+            window.Closed += (_, _) => RefreshJobs();
+            window.Show();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Failed to open Slideshow Editor");
+            _logger.LogError(ex, "打开剧本审阅窗口失败");
         }
     }
 

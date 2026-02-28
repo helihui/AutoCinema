@@ -27,36 +27,51 @@ public class TextToVideoJobHandler : IJobHandler
     public async Task ExecuteAsync(JobItem job, IProgress<ProductionProgress> progress, CancellationToken ct)
     {
         if (job is not TextToVideoJob textJob)
-        {
             throw new ArgumentException($"Job type {job.Type} is not supported by TextToVideoJobHandler");
-        }
 
         var project = textJob.ProjectData;
         _logger.LogInformation("Processing TextToVideo Job: {JobId} for Project: {ProjectId}", job.JobId, project.ProjectId);
 
-        // Update Project Status to Processing
         await _projectService.UpdateProjectStatusAsync(project.ProjectId, ProjectStatus.Processing);
 
         try
         {
-            // Update Project Progress proxy
-            var projectProgress = new Progress<ProductionProgress>(p =>
+            // 用包装 Progress 拦截 ReviewGate 信号
+            var interceptProgress = new Progress<ProductionProgress>(p =>
             {
-                // This updates the 'VideoProject' specific progress in DB if needed
-                _projectService.UpdateProjectProgressAsync(project.ProjectId, p).Wait();
+                // 检测 CoDesign ReviewGate：设置任务状态为 WaitingForReview
+                if (p.ReviewGate != null && !job.HasPendingReview)
+                {
+                    _logger.LogInformation("CoDesign ReviewGate 检测到，Job {JobId} 进入 WaitingForReview", job.JobId);
+                    job.ReviewGate = p.ReviewGate;
+                    job.Status = JobStatus.WaitingForReview;
+                }
 
-                // Report back to the JobManager's progress tracker
+                job.Progress = p;
                 progress.Report(p);
             });
 
-            var resultPath = await _pipeline.ProduceAsync(project, projectProgress, ct);
+            // 若有 ReviewGate，pipeline 内部已经通过 Progress 传出来了。
+            // 但 pipeline 本身需要等 gate 解锁后才能收到最终剧本继续运行（gate.WaitForApprovalAsync 由 ScreenplayGenerationStep 调用）。
+            // 所以 ProduceAsync 会在等待过程中长时间阻塞，直到用户 Approve 或 Cancel。
+            var resultPath = await _pipeline.ProduceAsync(project, interceptProgress, ct);
 
-            // Update Project Result
             await _projectService.UpdateProjectResultAsync(project.ProjectId, resultPath);
             job.OutputPath = resultPath;
+            job.ReviewGate = null; // 清除 gate
+        }
+        catch (OperationCanceledException)
+        {
+            // 用户 Cancel ReviewGate 会导致 pipeline 抛出 OperationCanceledException
+            job.ReviewGate = null;
+            job.Status = JobStatus.Cancelled;
+            await _projectService.UpdateProjectErrorAsync(project.ProjectId, "用户取消了剧本审阅");
+            _logger.LogInformation("Job {JobId} 因用户取消审阅而终止", job.JobId);
+            throw; // 让 JobManager 处理状态收尾
         }
         catch (Exception ex)
         {
+            job.ReviewGate = null;
             await _projectService.UpdateProjectErrorAsync(project.ProjectId, ex.Message);
             throw;
         }

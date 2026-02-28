@@ -49,24 +49,44 @@ public class FFMpegVideoService : IVideoCompositionService
                 _logger.LogDebug("生成片段 {Index}/{Total}: {Duration:mm\\:ss\\.fff}",
                     i + 1, orderedAssets.Count, asset.AudioDuration);
 
-                // 使用 -loop 1 -t [duration] 将静态图片转为视频
-                // 这是音画对齐的拉伸策略
-                // 添加 scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2
-                // 确保输出为标准 1080p，避免高分辨率导致的内存问题
-                await FFMpegArguments
+                // 有配音：图片 + 音频文件；纯画面：图片 + lavfi 静音源
+                var baseArgs = FFMpegArguments
                     .FromFileInput(asset.ImagePath, verifyExists: true, options => options
                         .Loop(1)
-                        .WithDuration(asset.AudioDuration))
-                    .AddFileInput(asset.AudioPath, verifyExists: true)
-                    .OutputToFile(segmentPath, overwrite: true, options => options
-                        .WithVideoCodec(VideoCodec.LibX264)
-                        .WithAudioCodec(AudioCodec.Aac)
-                        .WithFramerate(_options.FrameRate)
-                        .WithConstantRateFactor(_options.VideoQuality)
-                        .ForceFormat("mpegts")
-                        .WithCustomArgument("-vf \"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2\"")
-                        .WithCustomArgument("-shortest"))
-                    .ProcessAsynchronously();
+                        .WithDuration(asset.AudioDuration));
+
+                if (!string.IsNullOrEmpty(asset.AudioPath))
+                {
+                    // 正常镜头：使用实际音频文件
+                    await baseArgs
+                        .AddFileInput(asset.AudioPath, verifyExists: true)
+                        .OutputToFile(segmentPath, overwrite: true, options => options
+                            .WithVideoCodec(VideoCodec.LibX264)
+                            .WithAudioCodec(AudioCodec.Aac)
+                            .WithFramerate(_options.FrameRate)
+                            .WithConstantRateFactor(_options.VideoQuality)
+                            .ForceFormat("mpegts")
+                            .WithCustomArgument("-vf \"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2\"")
+                            .WithCustomArgument("-shortest"))
+                        .ProcessAsynchronously();
+                }
+                else
+                {
+                    // 纯画面镜头：注入 lavfi 静音源，保证所有片段音频轨一致
+                    await baseArgs
+                        .AddFileInput("anullsrc=r=44100:cl=stereo", verifyExists: false, options => options
+                            .ForceFormat("lavfi")
+                            .WithDuration(asset.AudioDuration))
+                        .OutputToFile(segmentPath, overwrite: true, options => options
+                            .WithVideoCodec(VideoCodec.LibX264)
+                            .WithAudioCodec(AudioCodec.Aac)
+                            .WithFramerate(_options.FrameRate)
+                            .WithConstantRateFactor(_options.VideoQuality)
+                            .ForceFormat("mpegts")
+                            .WithCustomArgument("-vf \"scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2\"")
+                            .WithCustomArgument("-shortest"))
+                        .ProcessAsynchronously();
+                }
 
                 _logger.LogInformation("片段生成完成: segment_{Index:D3}.ts", i);
             }

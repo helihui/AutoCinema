@@ -59,16 +59,26 @@
                   Margin="10">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding JobId}" Width="160"/>
-                <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="120"/>
-                <DataGridTextColumn Header="状态" Binding="{Binding Status}" Width="100"/>
-                
+                <DataGridTextColumn Header="任务类型" Binding="{Binding Type}" Width="100"/>
+
+                <!-- 状态列 -->
+                <DataGridTemplateColumn Header="状态" Width="110">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Status}" FontSize="12"
+                                       HorizontalAlignment="Center"
+                                       Foreground="White"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <DataGridTemplateColumn Header="进度" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid ColumnDefinitions="*, Auto">
-                                <ProgressBar Value="{Binding Progress.Percentage}" Minimum="0" Maximum="100" 
+                                <ProgressBar Value="{Binding Progress.Percentage}" Minimum="0" Maximum="100"
                                              Height="10" Margin="5" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Progress.Percentage, StringFormat={}{0:F0}%}" 
+                                <TextBlock Grid.Column="1" Text="{Binding Progress.Percentage, StringFormat={}{0:F0}%}"
                                            VerticalAlignment="Center" Margin="5,0"/>
                             </Grid>
                         </DataTemplate>
@@ -77,9 +87,25 @@
 
                 <DataGridTextColumn Header="当前步骤" Binding="{Binding Progress.Step}" Width="*"/>
                 <DataGridTextColumn Header="创建时间" Binding="{Binding CreatedAt}" Width="160"/>
-                
+
+                <!-- 「查看剧本」按钮列（CoDesign WaitingForReview 时亮起）-->
+                <DataGridTemplateColumn Header="剧本审阅" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="🎬 查看剧本"
+                                    IsVisible="{Binding HasPendingReview}"
+                                    Command="{Binding $parent[Window].((vm:BatchJobWindowViewModel)DataContext).ReviewStoryboardCommand}"
+                                    CommandParameter="{Binding}"
+                                    Background="#e8a020" Foreground="White"
+                                    FontSize="11" FontWeight="SemiBold"
+                                    Padding="6,4" CornerRadius="6"
+                                    HorizontalAlignment="Center"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
                 <!-- Result Column -->
-                <DataGridTemplateColumn Header="结果" Width="100">
+                <DataGridTemplateColumn Header="结果" Width="80">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="打开" IsVisible="{Binding OutputPath, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"

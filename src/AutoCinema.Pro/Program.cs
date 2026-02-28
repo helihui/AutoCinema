@@ -9,6 +9,7 @@ using AutoCinema.Pro.Services;
 using AutoCinema.Pro.Services.Actor;
 using AutoCinema.Pro.Services.Director;
 using AutoCinema.Pro.Services.Editor;
+using AutoCinema.Pro.Services.Audio;
 using FFMpegCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -118,6 +119,7 @@ public class Program
         services.AddSingleton<IAudioAnalysisService, NAudioAnalysisService>();
         services.AddSingleton<ISubtitleService, SrtSubtitleService>();
         services.AddSingleton<IVideoCompositionService, FFMpegVideoService>();
+        services.AddSingleton<IAudioPreprocessorService, FFMpegAudioPreprocessorService>();
 
         // 注册 Pipeline 步骤
         services.AddScoped<StoryboardParsingStep>();

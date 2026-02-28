@@ -13,33 +13,39 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AutoCinema.Desktop
-build_property.ProjectDir = e:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\
+build_property.ProjectDir = E:\100.Work\NestCoreProject\AutoCinema\src\AutoCinema.Desktop\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/App.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/App.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/BatchJobWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/BatchJobWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/Controls/ScriptToVideoControl.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/Controls/ScriptToVideoControl.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/JobCreationWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/JobCreationWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainHomeWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainHomeWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/SlideshowEditorWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MessageWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/StyleConfigWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/SlideshowEditorWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[e:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/VoiceConfigWindow.axaml]
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/StoryboardReviewWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/StyleConfigWindow.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/VoiceConfigWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

@@ -1,0 +1,11 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="AutoCinema.Desktop.Views.MessageWindow"
+        Title="提示" Width="400" Height="200"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+    <StackPanel Margin="20" Spacing="20" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+        <TextBlock Name="MessageText" TextWrapping="Wrap" TextAlignment="Center" FontSize="16"/>
+        <Button Content="确定" Width="100" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Click="OnOkClick"/>
+    </StackPanel>
+</Window>

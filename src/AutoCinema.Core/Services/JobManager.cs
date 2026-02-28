@@ -88,6 +88,9 @@ public class JobManager : IJobManager, IDisposable
 
         _logger.LogInformation("任务 {JobId} ({Type}) 已加入队列", job.JobId, job.Type);
         QueueStateChanged?.Invoke(this, EventArgs.Empty);
+
+        // 如果当前队列已暂停(说明空闲了)，则加入新任务后自动激活处理线程
+        StartProcessing();
     }
 
     public void StartProcessing()
@@ -189,7 +192,11 @@ public class JobManager : IJobManager, IDisposable
             }
             else
             {
-                await Task.Delay(1000); // 队列为空时等待
+                // Queue is empty, auto-pause to update UI state
+                _isRunning = false;
+                _logger.LogInformation("任务队列已清空，自动暂停处理");
+                QueueStateChanged?.Invoke(this, EventArgs.Empty);
+                break; // Exit the loop until StartProcessing is called again
             }
         }
     }

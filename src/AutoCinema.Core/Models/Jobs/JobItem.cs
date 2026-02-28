@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 using AutoCinema.Pro.Pipeline;
+using AutoCinema.Pro.Pipeline.Models;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -12,6 +14,8 @@ public enum JobStatus
 {
     Pending,
     Processing,
+    /// <summary>CoDesign 模式：剧本已生成，等待用户在 UI 确认分镜后继续</summary>
+    WaitingForReview,
     Completed,
     Failed,
     Cancelled
@@ -85,4 +89,21 @@ public abstract class JobItem : INotifyPropertyChanged
         get => _progress;
         set => SetProperty(ref _progress, value);
     }
+
+    /// <summary>
+    /// CoDesign 审阅关卡。当 Status == WaitingForReview 时不为 null。
+    /// 由 JobHandler 在 ScreenplayGenerationStep 返回 ReviewGate 后设置。
+    /// </summary>
+    [JsonIgnore]
+    [NotMapped]   // 阯止 EF Core 将此属性误识别为关联实体
+    public StoryboardReviewGate? ReviewGate
+    {
+        get => _reviewGate;
+        set => SetProperty(ref _reviewGate, value);
+    }
+    private StoryboardReviewGate? _reviewGate;
+
+    /// <summary>是否有待确认的剧本审阅</summary>
+    [JsonIgnore]
+    public bool HasPendingReview => Status == JobStatus.WaitingForReview && ReviewGate != null;
 }
