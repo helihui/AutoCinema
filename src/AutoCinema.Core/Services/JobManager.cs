@@ -224,6 +224,20 @@ public class JobManager : IJobManager, IDisposable
             {
                 context.Entry(existing).CurrentValues.SetValues(job);
                 existing.Progress = job.Progress;
+                
+                // EF Core 的 SetValues 默认不会处理导航属性或一些特定的复杂 ValueConverter 属性
+                // 需要针对多态的属性进行显式赋值，并强制标记修改，以便重新序列化保存 JSON
+                if (existing is TextToVideoJob tExisting && job is TextToVideoJob tJob)
+                {
+                    tExisting.ProjectData = tJob.ProjectData;
+                    context.Entry(tExisting).Property(x => x.ProjectData).IsModified = true;
+                }
+                else if (existing is SlideshowJob sExisting && job is SlideshowJob sJob)
+                {
+                    sExisting.Items = sJob.Items;
+                    context.Entry(sExisting).Property(x => x.Items).IsModified = true;
+                }
+
                 await context.SaveChangesAsync();
             }
         }

@@ -31,24 +31,14 @@
             </Border>
 
             <!-- Main Content Area -->
-            <Grid Grid.Row="1" ColumnDefinitions="*, *" Margin="40">
-                <!-- Video Generator Tile -->
-                <Button Grid.Column="0" 
-                        Margin="10" 
-                        HorizontalAlignment="Stretch" 
-                        VerticalAlignment="Stretch"
-                        Background="#2d2d2d"
-                        CornerRadius="10"
-                        Click="OpenVideoGenerator_Click">
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="20">
-                        <TextBlock Text="🎬" FontSize="48" HorizontalAlignment="Center"/>
-                        <TextBlock Text="视频生成器" FontSize="20" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                        <TextBlock Text="AI 驱动的自动视频创作工具" Foreground="#aaa" HorizontalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+            <Grid Grid.Row="1" Margin="40">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="400" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <!-- Placeholder for Future Feature -->
-                <!-- Batch Job Manager Tile -->
+                <!-- Batch Job Manager Tile (Centered) -->
                 <Button Grid.Column="1" 
                         Margin="10" 
                         HorizontalAlignment="Stretch" 

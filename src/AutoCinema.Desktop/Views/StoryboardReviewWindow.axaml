@@ -26,15 +26,18 @@
 
         <!-- Main Content Editor -->
         <Border Grid.Row="1" Margin="10" Background="#1e1e1e" BorderBrush="#333" BorderThickness="1">
-            <avaloniaEdit:TextEditor Name="JsonEditor"
-                                     ShowLineNumbers="True"
-                                     FontFamily="Consolas, Courier New, monospace"
-                                     Foreground="#d4d4d4"
-                                     Background="#1e1e1e"
-                                     HorizontalScrollBarVisibility="Auto"
-                                     VerticalScrollBarVisibility="Visible"
-                                     WordWrap="False"
-                                     FontSize="14" />
+            <TextBox Name="JsonEditor"
+                     AcceptsReturn="True"
+                     AcceptsTab="True"
+                     TextWrapping="NoWrap"
+                     FontFamily="Consolas, Courier New, monospace"
+                     Foreground="#d4d4d4"
+                     Background="#1e1e1e"
+                     CaretBrush="#d4d4d4"
+                     BorderThickness="0"
+                     FontSize="14"
+                     Text="{Binding ScreenplayJsonText, Mode=TwoWay}"
+                     IsReadOnly="{Binding IsReadOnly}" />
         </Border>
 
         <!-- Footer / Action bar -->

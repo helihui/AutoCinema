@@ -8,6 +8,7 @@ using AutoCinema.Pro.Services;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Avalonia.Controls;
+using Microsoft.Extensions.Logging;
 
 namespace AutoCinema.Desktop.ViewModels;
 
@@ -15,6 +16,7 @@ public partial class StoryboardReviewViewModel : ViewModelBase
 {
     private readonly JobItem _jobItem;
     private readonly IJobManager? _jobManager;
+    private readonly ILogger<StoryboardReviewViewModel> _logger;
 
     [ObservableProperty]
     private string _windowTitle = "剧本查看与编辑";
@@ -37,18 +39,21 @@ public partial class StoryboardReviewViewModel : ViewModelBase
     /// <summary>
     /// 支持直接通过包含了 ScreenplayRawData 的任务打开（用于随时查看和修改）
     /// </summary>
-    public StoryboardReviewViewModel(JobItem jobItem, IJobManager jobManager)
+    public StoryboardReviewViewModel(JobItem jobItem, IJobManager jobManager, ILogger<StoryboardReviewViewModel> logger)
     {
         _jobItem = jobItem;
         _jobManager = jobManager;
+        _logger = logger;
 
         if (jobItem is TextToVideoJob t && t.ProjectData != null)
         {
+            _logger.LogInformation("正在加载任务 {JobId} 的剧本数据，数据长度: {Length}", jobItem.JobId, t.ProjectData.ScreenplayRawData?.Length ?? 0);
             WindowTitle = $"剧本查看 - {jobItem.Title}";
             LoadAndFormatJson(t.ProjectData.ScreenplayRawData);
         }
         else
         {
+            _logger.LogWarning("任务 {JobId} (Type: {Type}) 未包含有效的 ProjectData", jobItem.JobId, jobItem.Type);
             StatusMessage = "未找到可用的剧本数据";
             IsReadOnly = true;
         }
@@ -65,6 +70,7 @@ public partial class StoryboardReviewViewModel : ViewModelBase
     {
         if (string.IsNullOrWhiteSpace(rawJson))
         {
+            _logger.LogWarning("剧本数据为空 (null or whitespace)");
             ScreenplayJsonText = "{}";
             return;
         }
@@ -78,9 +84,11 @@ public partial class StoryboardReviewViewModel : ViewModelBase
                 Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping 
             };
             ScreenplayJsonText = JsonSerializer.Serialize(parsed, opt);
+            _logger.LogInformation("剧本格式化成功，字符数: {Length}", ScreenplayJsonText.Length);
         }
-        catch
+        catch (Exception ex)
         {
+            _logger.LogWarning(ex, "剧本内容 JSON 解析格式化失败，显示原报文");
             // 如果解析失败，直接显示原始内容
             ScreenplayJsonText = rawJson;
         }

@@ -9,18 +9,15 @@ namespace AutoCinema.Core.Services.Jobs;
 public class TextToVideoJobHandler : IJobHandler
 {
     private readonly IVideoProductionPipeline _pipeline;
-    private readonly IProjectService _projectService;
     private readonly ILogger<TextToVideoJobHandler> _logger;
 
     public JobType SupportedType => JobType.TextOnVideo;
 
     public TextToVideoJobHandler(
         IVideoProductionPipeline pipeline,
-        IProjectService projectService,
         ILogger<TextToVideoJobHandler> logger)
     {
         _pipeline = pipeline;
-        _projectService = projectService;
         _logger = logger;
     }
 
@@ -31,8 +28,6 @@ public class TextToVideoJobHandler : IJobHandler
 
         var project = textJob.ProjectData;
         _logger.LogInformation("Processing TextToVideo Job: {JobId} for Project: {ProjectId}", job.JobId, project.ProjectId);
-
-        await _projectService.UpdateProjectStatusAsync(project.ProjectId, ProjectStatus.Processing);
 
         try
         {
@@ -56,7 +51,6 @@ public class TextToVideoJobHandler : IJobHandler
             // 所以 ProduceAsync 会在等待过程中长时间阻塞，直到用户 Approve 或 Cancel。
             var resultPath = await _pipeline.ProduceAsync(project, interceptProgress, ct);
 
-            await _projectService.UpdateProjectResultAsync(project.ProjectId, resultPath);
             job.OutputPath = resultPath;
             job.ReviewGate = null; // 清除 gate
         }
@@ -65,14 +59,12 @@ public class TextToVideoJobHandler : IJobHandler
             // 用户 Cancel ReviewGate 会导致 pipeline 抛出 OperationCanceledException
             job.ReviewGate = null;
             job.Status = JobStatus.Cancelled;
-            await _projectService.UpdateProjectErrorAsync(project.ProjectId, "用户取消了剧本审阅");
             _logger.LogInformation("Job {JobId} 因用户取消审阅而终止", job.JobId);
             throw; // 让 JobManager 处理状态收尾
         }
         catch (Exception ex)
         {
             job.ReviewGate = null;
-            await _projectService.UpdateProjectErrorAsync(project.ProjectId, ex.Message);
             throw;
         }
     }

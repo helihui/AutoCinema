@@ -32,9 +32,6 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 [E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainHomeWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
-[E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MainWindow.axaml]
-build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
-
 [E:/100.Work/NestCoreProject/AutoCinema/src/AutoCinema.Desktop/Views/MessageWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 

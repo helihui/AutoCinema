@@ -18,7 +18,6 @@ namespace AutoCinema.Desktop.ViewModels;
 public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
 {
     private readonly IJobManager _jobManager;
-    private readonly IProjectService _projectService;
     private readonly ILogger<BatchJobWindowViewModel> _logger;
     private System.Timers.Timer? _refreshTimer;
 
@@ -36,11 +35,9 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
 
     public BatchJobWindowViewModel(
         IJobManager jobManager,
-        IProjectService projectService,
         ILogger<BatchJobWindowViewModel> logger)
     {
         _jobManager = jobManager;
-        _projectService = projectService;
         _logger = logger;
 
         _jobManager.QueueStateChanged += OnQueueStateChanged;
@@ -183,11 +180,40 @@ public partial class BatchJobWindowViewModel : ViewModelBase, IDisposable
     [RelayCommand]
     private void ReviewStoryboard(JobItem job)
     {
-        if (job == null || (!job.HasScreenplay)) return;
+        _logger.LogInformation("================== ReviewStoryboard 触发 ==================");
+        if (job == null)
+        {
+            _logger.LogWarning("ReviewStoryboard 被调用，但 job 参数为 null");
+            return;
+        }
+
+        _logger.LogInformation("ReviewStoryboard 请求打开任务: JobId={JobId}, Type={Type}, HasScreenplay={HasScreenplay}", 
+            job.JobId, job.Type, job.HasScreenplay);
+
+        if (!job.HasScreenplay)
+        {
+            _logger.LogWarning("任务 {JobId} 的 HasScreenplay 为 false，中止打开剧本窗口", job.JobId);
+            return;
+        }
+
+        if (job is TextToVideoJob textJob)
+        {
+            var dataLen = textJob.ProjectData?.ScreenplayRawData?.Length ?? 0;
+            _logger.LogInformation("任务 {JobId} 是 TextToVideoJob，其 ProjectData.ScreenplayRawData 长度为: {Length}", job.JobId, dataLen);
+        }
+        else
+        {
+            _logger.LogWarning("任务 {JobId} 不是 TextToVideoJob，实际类型为: {Type}", job.JobId, job.GetType().Name);
+        }
 
         try
         {
-            var vm = new StoryboardReviewViewModel(job, _jobManager);
+            var app = (App)Application.Current!;
+            var logger = app.Services!.GetRequiredService<ILogger<StoryboardReviewViewModel>>();
+            var vm = new StoryboardReviewViewModel(job, _jobManager, logger);
+
+            // 加日志 查看vm的值
+            _logger.LogInformation("StoryboardReviewViewModel 创建成功，vm:"+(vm.ScreenplayJsonText).ToString());
             var window = new StoryboardReviewWindow
             {
                 DataContext = vm

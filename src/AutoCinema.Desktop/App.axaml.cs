@@ -159,9 +159,7 @@ public partial class App : Application
         // 注册 Pipeline 配置
         services.AddSingleton<PipelineConfigurationLoader>();
 
-        // 注册 Pipeline
         services.AddSingleton<IVideoProductionPipeline, VideoProductionPipeline>();
-        services.AddSingleton<IProjectService, ProjectService>();
 
         // 注册 Job Handlers
         services.AddSingleton<IJobHandler, TextToVideoJobHandler>();
@@ -176,7 +174,7 @@ public partial class App : Application
         // But for pure DI resolution without callbacks, we can register them if constructors are clean.
         // Let's keep them registered for now, but we'll likely instantiate JobCreationViewModel manually in the Window.
 
-        services.AddSingleton<MainWindowViewModel>();
+
         services.AddSingleton<MainHomeWindowViewModel>();
         services.AddSingleton<BatchJobWindowViewModel>();
     }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutoCinema.Pro")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+507048f288ec9512dbe29755a19b5ead3e1c8f64")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc2ba82c1234c36fc50f8556f88c33737f47cf60")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutoCinema.Pro")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutoCinema.Pro")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

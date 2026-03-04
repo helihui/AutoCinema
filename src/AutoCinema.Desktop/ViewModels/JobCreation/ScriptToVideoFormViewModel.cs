@@ -21,7 +21,7 @@ namespace AutoCinema.Desktop.ViewModels.JobCreation;
 
 public partial class ScriptToVideoFormViewModel : ViewModelBase
 {
-    private readonly IProjectService _projectService;
+
     private readonly IVoiceConfigurationService _voiceConfigService;
     private readonly IAudioPlayerService _audioPlayerService;
     private readonly IJobManager _jobManager;
@@ -76,14 +76,12 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
     };
 
     public ScriptToVideoFormViewModel(
-        IProjectService projectService,
         IVoiceConfigurationService voiceConfigService,
         IAudioPlayerService audioPlayerService,
         IJobManager jobManager,
         IDbContextFactory<CinemaDbContext> dbContext,
         ILogger<ScriptToVideoFormViewModel> logger)
     {
-        _projectService = projectService;
         _voiceConfigService = voiceConfigService;
         _audioPlayerService = audioPlayerService;
         _jobManager = jobManager;
@@ -127,7 +125,7 @@ public partial class ScriptToVideoFormViewModel : ViewModelBase
                 } : null
             };
 
-            await _projectService.SubmitProjectAsync(project);
+
 
             var job = new TextToVideoJob
             {

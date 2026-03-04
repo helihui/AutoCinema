@@ -28,7 +28,7 @@ public class SlideshowJob : JobItem
     }
 
     /// <summary>幻灯片列表</summary>
-    public List<SlideItem> Items { get; init; } = new();
+    public List<SlideItem> Items { get; set; } = new();
 
     /// <summary>背景音乐路径(可选,将覆盖单页音频)</summary>
     public string? BackgroundMusicPath { get; init; }

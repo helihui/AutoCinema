@@ -16,6 +16,5 @@
     </Application.Styles>
 
     <Application.Resources>
-        <converters:StatusColorConverter x:Key="StatusColorConverter"/>
     </Application.Resources>
 </Application>

@@ -12,7 +12,6 @@ public class CinemaDbContext : DbContext
     {
     }
 
-    public DbSet<ProjectState> Projects { get; set; } = null!;
     public DbSet<AutoCinema.Pro.Models.Jobs.JobItem> Jobs { get; set; } = null!;
     public DbSet<ClonedVoiceRecord> ClonedVoices { get; set; } = null!;
     public DbSet<PipelineCacheRecord> PipelineCaches { get; set; } = null!;
@@ -25,13 +24,7 @@ public class CinemaDbContext : DbContext
         modelBuilder.Entity<PipelineCacheRecord>()
             .HasKey(c => c.CacheKey);
 
-        // 配置 Progress 属性的 JSON 序列化存储
-        modelBuilder.Entity<ProjectState>()
-            .Property(p => p.Progress)
-            .HasConversion(
-                v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                v => JsonSerializer.Deserialize<ProductionProgress>(v, (JsonSerializerOptions?)null)
-            );
+
 
         // 配置 ClonedVoiceRecord 主键
         modelBuilder.Entity<ClonedVoiceRecord>()
@@ -66,7 +59,7 @@ public class CinemaDbContext : DbContext
             .Property(j => j.ProjectData)
             .HasConversion(
                 v => JsonSerializer.Serialize(v, (JsonSerializerOptions?)null),
-                v => JsonSerializer.Deserialize<VideoProject>(v, (JsonSerializerOptions?)null)
+                v => JsonSerializer.Deserialize<VideoProject>(v, new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             );
     }
 }

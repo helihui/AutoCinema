@@ -133,7 +133,6 @@ public class Program
         // 注册 Pipeline
         services.AddScoped<VideoProductionPipeline>();
 
-        // 注册新增加的项目管理服务
-        services.AddSingleton<IProjectService, ProjectService>();
+
     }
 }
